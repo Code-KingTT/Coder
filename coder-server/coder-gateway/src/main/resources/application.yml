@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: coder-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 5be21940-5a70-465d-8c2c-906b7baf4e10
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://coder-user
+          predicates:
+            - Path=/user/**

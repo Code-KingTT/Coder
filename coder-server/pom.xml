@@ -18,6 +18,8 @@
     <description>Coder Server</description>
     <modules>
         <module>coder-gateway</module>
+        <module>coder-common</module>
+        <module>coder-user</module>
     </modules>
 
     <!-- 依赖版本统一管理 -->
