@@ -16,6 +16,9 @@
 
     <name>coder-server</name>
     <description>Coder Server</description>
+    <modules>
+        <module>coder-gateway</module>
+    </modules>
 
     <!-- 依赖版本统一管理 -->
     <properties>
