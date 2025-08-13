@@ -24,10 +24,22 @@ mybatis:
 # 日志配置
 logging:
   level:
+    root: info
     com.coder: debug
     org.springframework: info
+    org.springframework.web: debug
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}:%line] - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}:%line] - %msg%n"
+  file:
+    name: ./logs/coder-user.log
+    max-size: 100MB
+    max-history: 30
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 30
+      total-size-cap: 1GB
 
 # 开发环境特定配置
 app:
