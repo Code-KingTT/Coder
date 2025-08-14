@@ -1,7 +1,25 @@
--- 用户表建表脚本（无索引版本）
+-- Coder项目数据库初始化脚本
 -- 作者: Sunset
--- 创建时间: 2025-01-27
+-- 创建时间: 2025-8-13
 
+-- ======================================
+-- 数据库创建
+-- ======================================
+
+-- 创建数据库
+CREATE DATABASE IF NOT EXISTS `coder` 
+    CHARACTER SET utf8mb4 
+    COLLATE utf8mb4_unicode_ci 
+    COMMENT 'Coder项目数据库';
+
+-- 使用数据库
+USE `coder`;
+
+-- ======================================
+-- 表结构创建
+-- ======================================
+
+-- 用户表
 DROP TABLE IF EXISTS `sys_user`;
 
 CREATE TABLE `sys_user` (
