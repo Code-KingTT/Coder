@@ -1,6 +1,5 @@
 package com.coder.config;
 
-import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -14,44 +13,31 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 /**
  * Knife4j配置类
- * 
+ *
  * @author Sunset
  * @date 2025/1/27
  */
+
 @Configuration
 @EnableSwagger2WebMvc
-@EnableKnife4j
 public class Knife4jConfig {
 
-    /**
-     * 默认API分组
-     * 
-     * @return 默认API分组配置
-     */
     @Bean
-    public Docket defaultApi() {
+    public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("Coder系统API")
-                .apiInfo(apiInfo("Coder系统API文档", "基于Spring Boot + Spring Cloud的微服务系统API文档"))
+                .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.coder.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.redis.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
-    /**
-     * API信息
-     * 
-     * @param title       标题
-     * @param description 描述
-     * @return API信息
-     */
-    private ApiInfo apiInfo(String title, String description) {
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title(title)
-                .description(description)
+                .title("Redis缓存管理系统API文档")
+                .description("基于SpringBoot + Redis的缓存管理系统接口文档")
                 .version("1.0.0")
-                .contact(new Contact("Sunset", "", "sunset@713.com"))
+                .contact(new Contact("开发者", "http://localhost:8080", "developer@example.com"))
                 .build();
     }
 }

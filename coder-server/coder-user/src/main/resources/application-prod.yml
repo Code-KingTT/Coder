@@ -41,8 +41,6 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   # 类型别名包
   type-aliases-package: com.coder.entity
-  # 配置文件位置
-  config-location: classpath:mybatis-config.xml
   # 核心配置
   configuration:
     # 下划线转驼峰

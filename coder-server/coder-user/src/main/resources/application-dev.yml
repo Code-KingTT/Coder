@@ -25,7 +25,7 @@ spring:
   redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PASSWORD:}
+    password: ${REDIS_PASSWORD:Sunset}
     database: ${REDIS_DATABASE:0}
     timeout: 5000ms
     jedis:
@@ -35,14 +35,16 @@ spring:
         min-idle: 5
         max-wait: 3000ms
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 # MyBatis增强配置
 mybatis:
   # 映射文件位置
   mapper-locations: classpath:mapper/*.xml
   # 类型别名包
   type-aliases-package: com.coder.entity
-  # 配置文件位置
-  config-location: classpath:mybatis-config.xml
   # 核心配置
   configuration:
     # 下划线转驼峰
@@ -72,18 +74,27 @@ logging:
 # Knife4j配置
 knife4j:
   enable: true
-  openapi:
-    title: Coder用户服务API
-    description: 用户管理相关API接口文档
-    version: 1.0.0
-    concat: Sunset
-    email: sunset@example.com
-    license: Apache 2.0
-    license-url: https://www.apache.org/licenses/LICENSE-2.0.html
   setting:
-    # 是否显示Footer
-    enableFooter: false
-    # 是否显示主页
-    enableHomeCustom: true
-    # 主页内容
-    homeCustomLocation: classpath:markdown/home.md
+    language: zh_cn
+    enable-version: true
+    enable-reload-cache-parameter: true
+    enable-after-script: true
+    enable-filter-multipart-api-method-type: POST
+    enable-filter-multipart-apis: false
+    enable-request-cache: true
+    enable-host: false
+    enable-host-text: http://localhost:8081
+    enable-search: true
+    enable-footer: false
+    enable-footer-custom: true
+    footer-custom-content: XXX系统
+    enable-dynamic-parameter: true
+    enable-debug: true
+    enable-open-api: false
+    enable-group: true
+  cors: false
+  production: false
+  basic:
+    enable: false
+    username: admin
+    password: 123456
