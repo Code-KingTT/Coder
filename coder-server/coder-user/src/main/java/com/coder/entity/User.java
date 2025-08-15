@@ -1,5 +1,6 @@
 package com.coder.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ApiModel(value = "User", description = "用户实体")
+@TableName("sys_user")
 public class User extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

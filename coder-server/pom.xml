@@ -34,6 +34,7 @@
         <nacos.version>2021.0.5.0</nacos.version>
         <redis.version>2.7.18</redis.version>
         <knife4j.version>3.0.3</knife4j.version>
+        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
     </properties>
 
     <!-- 父模块打包类型必须为pom -->
@@ -89,6 +90,12 @@
                 <version>${knife4j.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -98,6 +105,18 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- MyBatis依赖 -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- MyBatis Plus依赖 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
 
     </dependencies>
