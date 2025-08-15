@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
  * Knife4j配置类
  *
  * @author Sunset
- * @date 2025/1/27
+ * @date 2025/8/15
  */
 
 @Configuration
@@ -27,17 +27,17 @@ public class Knife4jConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.redis.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.coder.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Redis缓存管理系统API文档")
-                .description("基于SpringBoot + Redis的缓存管理系统接口文档")
+                .title("Coder系统API文档")
+                .description("基于Spring Boot + Spring Cloud的微服务系统API文档")
                 .version("1.0.0")
-                .contact(new Contact("开发者", "http://localhost:8080", "developer@example.com"))
+                .contact(new Contact("Coder", "http://localhost:8080", "developer@coder.com"))
                 .build();
     }
 }
