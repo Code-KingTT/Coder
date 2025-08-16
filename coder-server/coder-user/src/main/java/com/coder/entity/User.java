@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  * 用户实体类
  *
  * @author Sunset
- * @date 2025-01-27
+ * @date 2025-08-15
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

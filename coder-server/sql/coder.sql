@@ -76,7 +76,7 @@ CREATE TABLE `sys_user` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
 
--- 初始化管理员用户（密码为123456，实际使用时应修改）
+-- 初始化管理员用户
 INSERT INTO `sys_user` (
     `username`, `password`, `salt`, `nickname`, `real_name`, `gender`, `status`, 
     `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`
