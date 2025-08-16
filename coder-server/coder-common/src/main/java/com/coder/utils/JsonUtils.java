@@ -141,7 +141,7 @@ public final class JsonUtils {
      * @return 对象实例
      */
     public static <T> T parseObject(String json, Class<T> clazz) {
-        if (StringUtils.isBlank(json) || clazz == null) {
+        if (StrUtils.isBlank(json) || clazz == null) {
             return null;
         }
         
@@ -162,7 +162,7 @@ public final class JsonUtils {
      * @return 对象实例
      */
     public static <T> T parseObject(String json, TypeReference<T> typeReference) {
-        if (StringUtils.isBlank(json) || typeReference == null) {
+        if (StrUtils.isBlank(json) || typeReference == null) {
             return null;
         }
         
@@ -206,7 +206,7 @@ public final class JsonUtils {
      * @return List集合
      */
     public static <T> List<T> parseList(String json, Class<T> clazz) {
-        if (StringUtils.isBlank(json) || clazz == null) {
+        if (StrUtils.isBlank(json) || clazz == null) {
             return null;
         }
         
@@ -238,7 +238,7 @@ public final class JsonUtils {
      * @return Map对象
      */
     public static <T> Map<String, T> parseMap(String json, Class<T> valueClass) {
-        if (StringUtils.isBlank(json) || valueClass == null) {
+        if (StrUtils.isBlank(json) || valueClass == null) {
             return null;
         }
         
@@ -260,7 +260,7 @@ public final class JsonUtils {
      * @return JsonNode
      */
     public static JsonNode parseTree(String json) {
-        if (StringUtils.isBlank(json)) {
+        if (StrUtils.isBlank(json)) {
             return null;
         }
         
@@ -280,7 +280,7 @@ public final class JsonUtils {
      * @return 字符串值
      */
     public static String getString(JsonNode jsonNode, String fieldName) {
-        if (jsonNode == null || StringUtils.isBlank(fieldName)) {
+        if (jsonNode == null || StrUtils.isBlank(fieldName)) {
             return null;
         }
         
@@ -296,7 +296,7 @@ public final class JsonUtils {
      * @return 整数值
      */
     public static Integer getInteger(JsonNode jsonNode, String fieldName) {
-        if (jsonNode == null || StringUtils.isBlank(fieldName)) {
+        if (jsonNode == null || StrUtils.isBlank(fieldName)) {
             return null;
         }
         
@@ -312,7 +312,7 @@ public final class JsonUtils {
      * @return 长整数值
      */
     public static Long getLong(JsonNode jsonNode, String fieldName) {
-        if (jsonNode == null || StringUtils.isBlank(fieldName)) {
+        if (jsonNode == null || StrUtils.isBlank(fieldName)) {
             return null;
         }
         
@@ -328,7 +328,7 @@ public final class JsonUtils {
      * @return 布尔值
      */
     public static Boolean getBoolean(JsonNode jsonNode, String fieldName) {
-        if (jsonNode == null || StringUtils.isBlank(fieldName)) {
+        if (jsonNode == null || StrUtils.isBlank(fieldName)) {
             return null;
         }
         
@@ -391,7 +391,7 @@ public final class JsonUtils {
      * @return true-有效，false-无效
      */
     public static boolean isValidJson(String json) {
-        if (StringUtils.isBlank(json)) {
+        if (StrUtils.isBlank(json)) {
             return false;
         }
         
@@ -410,7 +410,7 @@ public final class JsonUtils {
      * @return true-有效对象格式，false-无效
      */
     public static boolean isValidJsonObject(String json) {
-        if (StringUtils.isBlank(json)) {
+        if (StrUtils.isBlank(json)) {
             return false;
         }
         
@@ -429,7 +429,7 @@ public final class JsonUtils {
      * @return true-有效数组格式，false-无效
      */
     public static boolean isValidJsonArray(String json) {
-        if (StringUtils.isBlank(json)) {
+        if (StrUtils.isBlank(json)) {
             return false;
         }
         
@@ -451,10 +451,10 @@ public final class JsonUtils {
      * @return 合并后的JSON字符串
      */
     public static String mergeJson(String json1, String json2) {
-        if (StringUtils.isBlank(json1)) {
+        if (StrUtils.isBlank(json1)) {
             return json2;
         }
-        if (StringUtils.isBlank(json2)) {
+        if (StrUtils.isBlank(json2)) {
             return json1;
         }
         
@@ -533,7 +533,7 @@ public final class JsonUtils {
      * @return 字节数
      */
     public static int getJsonSize(String json) {
-        if (StringUtils.isBlank(json)) {
+        if (StrUtils.isBlank(json)) {
             return 0;
         }
         return json.getBytes().length;
@@ -546,7 +546,7 @@ public final class JsonUtils {
      * @return 格式化后的JSON字符串
      */
     public static String formatJson(String json) {
-        if (StringUtils.isBlank(json)) {
+        if (StrUtils.isBlank(json)) {
             return json;
         }
         
@@ -566,7 +566,7 @@ public final class JsonUtils {
      * @return 压缩后的JSON字符串
      */
     public static String compactJson(String json) {
-        if (StringUtils.isBlank(json)) {
+        if (StrUtils.isBlank(json)) {
             return json;
         }
         

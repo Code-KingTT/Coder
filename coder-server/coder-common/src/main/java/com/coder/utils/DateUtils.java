@@ -98,7 +98,7 @@ public final class DateUtils {
      * @return 格式化后的字符串
      */
     public static String format(LocalDateTime dateTime, String pattern) {
-        if (dateTime == null || StringUtils.isBlank(pattern)) {
+        if (dateTime == null || StrUtils.isBlank(pattern)) {
             return null;
         }
         return dateTime.format(DateTimeFormatter.ofPattern(pattern));
@@ -122,7 +122,7 @@ public final class DateUtils {
      * @return 格式化后的字符串
      */
     public static String format(LocalDate date, String pattern) {
-        if (date == null || StringUtils.isBlank(pattern)) {
+        if (date == null || StrUtils.isBlank(pattern)) {
             return null;
         }
         return date.format(DateTimeFormatter.ofPattern(pattern));
@@ -146,7 +146,7 @@ public final class DateUtils {
      * @return 格式化后的字符串
      */
     public static String format(LocalTime time, String pattern) {
-        if (time == null || StringUtils.isBlank(pattern)) {
+        if (time == null || StrUtils.isBlank(pattern)) {
             return null;
         }
         return time.format(DateTimeFormatter.ofPattern(pattern));
@@ -172,7 +172,7 @@ public final class DateUtils {
      * @return LocalDateTime
      */
     public static LocalDateTime parseDateTime(String dateTimeStr, String pattern) {
-        if (StringUtils.isBlank(dateTimeStr) || StringUtils.isBlank(pattern)) {
+        if (StrUtils.isBlank(dateTimeStr) || StrUtils.isBlank(pattern)) {
             return null;
         }
         try {
@@ -200,7 +200,7 @@ public final class DateUtils {
      * @return LocalDate
      */
     public static LocalDate parseDate(String dateStr, String pattern) {
-        if (StringUtils.isBlank(dateStr) || StringUtils.isBlank(pattern)) {
+        if (StrUtils.isBlank(dateStr) || StrUtils.isBlank(pattern)) {
             return null;
         }
         try {
@@ -228,7 +228,7 @@ public final class DateUtils {
      * @return LocalTime
      */
     public static LocalTime parseTime(String timeStr, String pattern) {
-        if (StringUtils.isBlank(timeStr) || StringUtils.isBlank(pattern)) {
+        if (StrUtils.isBlank(timeStr) || StrUtils.isBlank(pattern)) {
             return null;
         }
         try {

@@ -152,7 +152,7 @@ public final class BeanUtils {
      * @return 属性值
      */
     public static Object getProperty(Object obj, String propertyName) {
-        if (obj == null || StringUtils.isBlank(propertyName)) {
+        if (obj == null || StrUtils.isBlank(propertyName)) {
             return null;
         }
 
@@ -182,7 +182,7 @@ public final class BeanUtils {
      * @param propertyValue 属性值
      */
     public static void setProperty(Object obj, String propertyName, Object propertyValue) {
-        if (obj == null || StringUtils.isBlank(propertyName)) {
+        if (obj == null || StrUtils.isBlank(propertyName)) {
             return;
         }
 
@@ -212,7 +212,7 @@ public final class BeanUtils {
      * @return true-包含，false-不包含
      */
     public static boolean hasProperty(Object obj, String propertyName) {
-        if (obj == null || StringUtils.isBlank(propertyName)) {
+        if (obj == null || StrUtils.isBlank(propertyName)) {
             return false;
         }
 
@@ -383,7 +383,7 @@ public final class BeanUtils {
         List<String> propertyNames = getPropertyNames(obj);
         for (String propertyName : propertyNames) {
             Object value = getProperty(obj, propertyName);
-            if (value instanceof String && StringUtils.isBlank((String) value)) {
+            if (value instanceof String && StrUtils.isBlank((String) value)) {
                 blankProperties.add(propertyName);
             }
         }

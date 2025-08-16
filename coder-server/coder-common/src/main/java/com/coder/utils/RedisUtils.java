@@ -4,12 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -94,7 +91,7 @@ public final class RedisUtils {
      * @return true-存在，false-不存在
      */
     public boolean hasKey(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return false;
         }
         try {
@@ -112,7 +109,7 @@ public final class RedisUtils {
      * @return true-删除成功，false-删除失败
      */
     public boolean delete(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return false;
         }
         try {
@@ -151,7 +148,7 @@ public final class RedisUtils {
      * @return true-设置成功，false-设置失败
      */
     public boolean expire(String key, long timeout, TimeUnit unit) {
-        if (StringUtils.isBlank(key) || timeout <= 0 || unit == null) {
+        if (StrUtils.isBlank(key) || timeout <= 0 || unit == null) {
             return false;
         }
         try {
@@ -181,7 +178,7 @@ public final class RedisUtils {
      * @return 过期时间（秒），-1表示永不过期，-2表示key不存在
      */
     public long getExpire(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return -2L;
         }
         try {
@@ -203,7 +200,7 @@ public final class RedisUtils {
      * @return true-设置成功，false-设置失败
      */
     public boolean set(String key, Object value) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return false;
         }
         try {
@@ -225,7 +222,7 @@ public final class RedisUtils {
      * @return true-设置成功，false-设置失败
      */
     public boolean set(String key, Object value, long timeout, TimeUnit unit) {
-        if (StringUtils.isBlank(key) || timeout <= 0 || unit == null) {
+        if (StrUtils.isBlank(key) || timeout <= 0 || unit == null) {
             return false;
         }
         try {
@@ -257,7 +254,7 @@ public final class RedisUtils {
      * @return 值
      */
     public Object get(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return null;
         }
         try {
@@ -312,7 +309,7 @@ public final class RedisUtils {
      * @return 递增后的值
      */
     public long increment(String key, long delta) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return 0L;
         }
         try {
@@ -342,7 +339,7 @@ public final class RedisUtils {
      * @return 递减后的值
      */
     public long decrement(String key, long delta) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return 0L;
         }
         try {
@@ -365,7 +362,7 @@ public final class RedisUtils {
      * @return true-设置成功，false-设置失败
      */
     public boolean hset(String key, String hashKey, Object value) {
-        if (StringUtils.isBlank(key) || StringUtils.isBlank(hashKey)) {
+        if (StrUtils.isBlank(key) || StrUtils.isBlank(hashKey)) {
             return false;
         }
         try {
@@ -403,7 +400,7 @@ public final class RedisUtils {
      * @return 值
      */
     public Object hget(String key, String hashKey) {
-        if (StringUtils.isBlank(key) || StringUtils.isBlank(hashKey)) {
+        if (StrUtils.isBlank(key) || StrUtils.isBlank(hashKey)) {
             return null;
         }
         try {
@@ -448,7 +445,7 @@ public final class RedisUtils {
      * @return 哈希表
      */
     public Map<String, Object> hgetAll(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return new HashMap<>();
         }
         try {
@@ -467,7 +464,7 @@ public final class RedisUtils {
      * @return true-设置成功，false-设置失败
      */
     public boolean hmset(String key, Map<String, Object> map) {
-        if (StringUtils.isBlank(key) || CollectionUtils.isEmpty(map)) {
+        if (StrUtils.isBlank(key) || CollectionUtils.isEmpty(map)) {
             return false;
         }
         try {
@@ -503,7 +500,7 @@ public final class RedisUtils {
      * @return 删除成功的字段数量
      */
     public long hdel(String key, String... hashKeys) {
-        if (StringUtils.isBlank(key) || hashKeys == null || hashKeys.length == 0) {
+        if (StrUtils.isBlank(key) || hashKeys == null || hashKeys.length == 0) {
             return 0L;
         }
         try {
@@ -524,7 +521,7 @@ public final class RedisUtils {
      * @return true-存在，false-不存在
      */
     public boolean hexists(String key, String hashKey) {
-        if (StringUtils.isBlank(key) || StringUtils.isBlank(hashKey)) {
+        if (StrUtils.isBlank(key) || StrUtils.isBlank(hashKey)) {
             return false;
         }
         try {
@@ -546,7 +543,7 @@ public final class RedisUtils {
      * @return 列表长度
      */
     public long lpush(String key, Object value) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return 0L;
         }
         try {
@@ -566,7 +563,7 @@ public final class RedisUtils {
      * @return 列表长度
      */
     public long rpush(String key, Object value) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return 0L;
         }
         try {
@@ -585,7 +582,7 @@ public final class RedisUtils {
      * @return 弹出的元素
      */
     public Object lpop(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return null;
         }
         try {
@@ -603,7 +600,7 @@ public final class RedisUtils {
      * @return 弹出的元素
      */
     public Object rpop(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return null;
         }
         try {
@@ -623,7 +620,7 @@ public final class RedisUtils {
      * @return 元素列表
      */
     public List<Object> lrange(String key, long start, long end) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return new ArrayList<>();
         }
         try {
@@ -642,7 +639,7 @@ public final class RedisUtils {
      * @return 列表长度
      */
     public long llen(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return 0L;
         }
         try {
@@ -664,7 +661,7 @@ public final class RedisUtils {
      * @return 添加成功的元素数量
      */
     public long sadd(String key, Object... values) {
-        if (StringUtils.isBlank(key) || values == null || values.length == 0) {
+        if (StrUtils.isBlank(key) || values == null || values.length == 0) {
             return 0L;
         }
         try {
@@ -685,7 +682,7 @@ public final class RedisUtils {
      * @return 移除成功的元素数量
      */
     public long srem(String key, Object... values) {
-        if (StringUtils.isBlank(key) || values == null || values.length == 0) {
+        if (StrUtils.isBlank(key) || values == null || values.length == 0) {
             return 0L;
         }
         try {
@@ -705,7 +702,7 @@ public final class RedisUtils {
      * @return 集合元素
      */
     public Set<Object> smembers(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return new HashSet<>();
         }
         try {
@@ -724,7 +721,7 @@ public final class RedisUtils {
      * @return true-存在，false-不存在
      */
     public boolean sismember(String key, Object value) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return false;
         }
         try {
@@ -743,7 +740,7 @@ public final class RedisUtils {
      * @return 集合大小
      */
     public long scard(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return 0L;
         }
         try {
@@ -766,7 +763,7 @@ public final class RedisUtils {
      * @return true-添加成功，false-添加失败
      */
     public boolean zadd(String key, Object value, double score) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return false;
         }
         try {
@@ -786,7 +783,7 @@ public final class RedisUtils {
      * @return 移除成功的元素数量
      */
     public long zrem(String key, Object... values) {
-        if (StringUtils.isBlank(key) || values == null || values.length == 0) {
+        if (StrUtils.isBlank(key) || values == null || values.length == 0) {
             return 0L;
         }
         try {
@@ -808,7 +805,7 @@ public final class RedisUtils {
      * @return 元素集合
      */
     public Set<Object> zrange(String key, long start, long end) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return new LinkedHashSet<>();
         }
         try {
@@ -829,7 +826,7 @@ public final class RedisUtils {
      * @return 元素集合
      */
     public Set<Object> zrangeByScore(String key, double min, double max) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return new LinkedHashSet<>();
         }
         try {
@@ -848,7 +845,7 @@ public final class RedisUtils {
      * @return 集合大小
      */
     public long zcard(String key) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return 0L;
         }
         try {
@@ -868,7 +865,7 @@ public final class RedisUtils {
      * @return 分数，null表示元素不存在
      */
     public Double zscore(String key, Object value) {
-        if (StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(key)) {
             return null;
         }
         try {
@@ -891,7 +888,7 @@ public final class RedisUtils {
      * @return true-获取成功，false-获取失败
      */
     public boolean tryLock(String lockKey, String requestId, long expireTime) {
-        if (StringUtils.isBlank(lockKey) || StringUtils.isBlank(requestId) || expireTime <= 0) {
+        if (StrUtils.isBlank(lockKey) || StrUtils.isBlank(requestId) || expireTime <= 0) {
             return false;
         }
         try {
@@ -913,7 +910,7 @@ public final class RedisUtils {
      * @return true-释放成功，false-释放失败
      */
     public boolean releaseLock(String lockKey, String requestId) {
-        if (StringUtils.isBlank(lockKey) || StringUtils.isBlank(requestId)) {
+        if (StrUtils.isBlank(lockKey) || StrUtils.isBlank(requestId)) {
             return false;
         }
         try {
@@ -937,7 +934,7 @@ public final class RedisUtils {
      * @return true-续期成功，false-续期失败
      */
     public boolean renewLock(String lockKey, String requestId, long expireTime) {
-        if (StringUtils.isBlank(lockKey) || StringUtils.isBlank(requestId) || expireTime <= 0) {
+        if (StrUtils.isBlank(lockKey) || StrUtils.isBlank(requestId) || expireTime <= 0) {
             return false;
         }
         try {

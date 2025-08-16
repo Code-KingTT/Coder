@@ -60,7 +60,7 @@ public final class EncryptUtils {
      * @return MD5散列值（32位小写）
      */
     public static String md5(String input) {
-        if (StringUtils.isBlank(input)) {
+        if (StrUtils.isBlank(input)) {
             return null;
         }
         return md5(input.getBytes(StandardCharsets.UTF_8));
@@ -95,7 +95,7 @@ public final class EncryptUtils {
      * @return MD5散列值（32位小写）
      */
     public static String md5WithSalt(String input, String salt) {
-        if (StringUtils.isBlank(input)) {
+        if (StrUtils.isBlank(input)) {
             return null;
         }
         String saltedInput = input + (salt != null ? salt : "");
@@ -142,7 +142,7 @@ public final class EncryptUtils {
      * @return 散列值
      */
     private static String hash(String input, String algorithm) {
-        if (StringUtils.isBlank(input)) {
+        if (StrUtils.isBlank(input)) {
             return null;
         }
         
@@ -183,7 +183,7 @@ public final class EncryptUtils {
      * @return Base64编码的密文
      */
     public static String aesEncrypt(String plainText, String key) {
-        if (StringUtils.isBlank(plainText) || StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(plainText) || StrUtils.isBlank(key)) {
             return null;
         }
         
@@ -210,7 +210,7 @@ public final class EncryptUtils {
      * @return 明文
      */
     public static String aesDecrypt(String cipherText, String key) {
-        if (StringUtils.isBlank(cipherText) || StringUtils.isBlank(key)) {
+        if (StrUtils.isBlank(cipherText) || StrUtils.isBlank(key)) {
             return null;
         }
         
@@ -239,7 +239,7 @@ public final class EncryptUtils {
      * @return Base64编码字符串
      */
     public static String base64Encode(String input) {
-        if (StringUtils.isBlank(input)) {
+        if (StrUtils.isBlank(input)) {
             return null;
         }
         return Base64.getEncoder().encodeToString(input.getBytes(StandardCharsets.UTF_8));
@@ -265,7 +265,7 @@ public final class EncryptUtils {
      * @return 解码后的字符串
      */
     public static String base64Decode(String input) {
-        if (StringUtils.isBlank(input)) {
+        if (StrUtils.isBlank(input)) {
             return null;
         }
         try {
@@ -284,7 +284,7 @@ public final class EncryptUtils {
      * @return 解码后的字节数组
      */
     public static byte[] base64DecodeToBytes(String input) {
-        if (StringUtils.isBlank(input)) {
+        if (StrUtils.isBlank(input)) {
             return null;
         }
         try {
@@ -304,7 +304,7 @@ public final class EncryptUtils {
      * @return 随机数字字符串
      */
     public static String randomNumeric(int length) {
-        return StringUtils.randomNumeric(length);
+        return StrUtils.randomNumeric(length);
     }
 
     /**
@@ -314,7 +314,7 @@ public final class EncryptUtils {
      * @return 随机字母字符串
      */
     public static String randomAlphabetic(int length) {
-        return StringUtils.randomAlphabetic(length);
+        return StrUtils.randomAlphabetic(length);
     }
 
     /**
@@ -324,7 +324,7 @@ public final class EncryptUtils {
      * @return 随机字母数字字符串
      */
     public static String randomAlphanumeric(int length) {
-        return StringUtils.randomAlphanumeric(length);
+        return StrUtils.randomAlphanumeric(length);
     }
 
     /**
@@ -474,7 +474,7 @@ public final class EncryptUtils {
      * @return 强度等级：0-弱，1-中等，2-强
      */
     public static int checkPasswordStrength(String password) {
-        if (StringUtils.isBlank(password)) {
+        if (StrUtils.isBlank(password)) {
             return 0;
         }
         

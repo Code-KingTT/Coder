@@ -12,12 +12,12 @@ import java.util.regex.Pattern;
  * @author Sunset
  * @date 2025/8/13
  */
-public final class StringUtils {
+public final class StrUtils {
 
     /**
      * 私有构造方法，防止实例化
      */
-    private StringUtils() {
+    private StrUtils() {
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }
 

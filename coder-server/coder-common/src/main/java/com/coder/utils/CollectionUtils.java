@@ -357,7 +357,7 @@ public final class CollectionUtils {
      * @return 移除空字符串后的List
      */
     public static List<String> removeBlankStrings(Collection<String> collection) {
-        return filter(collection, StringUtils::isNotBlank);
+        return filter(collection, StrUtils::isNotBlank);
     }
 
     // ================ 集合转换映射方法 ================
