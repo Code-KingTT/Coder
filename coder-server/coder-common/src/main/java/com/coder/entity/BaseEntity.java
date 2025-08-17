@@ -110,7 +110,7 @@ public abstract class BaseEntity implements Serializable {
      *
      * @return true-已删除，false-未删除
      */
-    public boolean isDeleted() {
+    public boolean checkDeleted() {
         return Objects.equals(this.deleted, 1);
     }
 
