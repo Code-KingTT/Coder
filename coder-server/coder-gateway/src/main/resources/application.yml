@@ -17,16 +17,16 @@ spring:
       # 路由配置
       routes:
         # 用户服务路由
-          # 路由ID
         - id: user-service
           # lb表示负载均衡
           uri: lb://coder-user
           predicates:
-            # 路径匹配规则
-            - Path=/user/**
+            # 路径匹配规则：匹配 /api/user/** 的请求
+#            - Path=/api/user/**
+            - Path=/coder/user/**
           filters:
-            # 去掉路径前缀
-            - StripPrefix=1
+            # 重写路径：将 /api/user/** 重写为 /coder/user/**
+            # - RewritePath=/api/user/(?<segment>.*), /coder/user/$\{segment}
 
       # 跨域配置
       globalcors:

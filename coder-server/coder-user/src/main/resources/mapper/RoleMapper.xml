@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coder.mapper.RoleMapper">
+
+    <!-- 角色结果映射 -->
+    <resultMap type="Role" id="RoleResult">
+        <id property="id" column="id"/>
+        <result property="roleCode" column="role_code"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleDesc" column="role_desc"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="deleted" column="deleted"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <!-- 基础字段映射 -->
+    <sql id="Base_Column_List">
+        id, role_code, role_name, role_desc, sort_order, status,
+        create_time, update_time, create_by, update_by, deleted, remark
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="Where_Clause">
+        <where>
+            deleted = 0
+            <if test="roleCode != null and roleCode != ''">
+                AND role_code LIKE CONCAT('%', #{roleCode}, '%')
+            </if>
+            <if test="roleName != null and roleName != ''">
+                AND role_name LIKE CONCAT('%', #{roleName}, '%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 插入角色 -->
+    <insert id="insert" parameterType="Role" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_role (
+            role_code, role_name, role_desc, sort_order, status,
+            create_time, update_time, create_by, update_by, deleted, remark
+        ) VALUES (
+                     #{roleCode}, #{roleName}, #{roleDesc}, #{sortOrder}, #{status},
+                     #{createTime}, #{updateTime}, #{createBy}, #{updateBy}, #{deleted}, #{remark}
+                 )
+    </insert>
+
+    <!-- 逻辑删除角色 -->
+    <update id="deleteById">
+        UPDATE sys_role
+        SET deleted = 1, update_time = NOW(), update_by = #{updateBy}
+        WHERE id = #{id} AND deleted = 0
+    </update>
+
+    <!-- 更新角色 -->
+    <update id="updateById" parameterType="Role">
+        UPDATE sys_role
+        <set>
+            <if test="roleCode != null">role_code = #{roleCode},</if>
+            <if test="roleName != null">role_name = #{roleName},</if>
+            <if test="roleDesc != null">role_desc = #{roleDesc},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = #{updateTime},
+            update_by = #{updateBy}
+        </set>
+        WHERE id = #{id} AND deleted = 0
+    </update>
+
+    <!-- 根据ID查询角色 -->
+    <select id="selectById" resultMap="RoleResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sys_role
+        WHERE id = #{id} AND deleted = 0
+    </select>
+
+    <!-- 根据角色编码查询角色 -->
+    <select id="selectByRoleCode" resultMap="RoleResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sys_role
+        WHERE role_code = #{roleCode} AND deleted = 0
+    </select>
+
+    <!-- 分页查询角色列表 -->
+    <select id="selectPageList" resultMap="RoleResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sys_role
+        <include refid="Where_Clause"/>
+        <choose>
+            <when test="orderBy != null and orderBy != '' and orderDirection != null and orderDirection != ''">
+                ORDER BY ${orderBy} ${orderDirection}
+            </when>
+            <otherwise>
+                ORDER BY sort_order ASC, create_time DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 查询角色总数 -->
+    <select id="selectCount" resultType="Long">
+        SELECT COUNT(1)
+        FROM sys_role
+        <include refid="Where_Clause"/>
+    </select>
+
+    <!-- 批量逻辑删除角色 -->
+    <update id="deleteBatchByIds">
+        UPDATE sys_role
+        SET deleted = 1, update_time = NOW(), update_by = #{updateBy}
+        WHERE deleted = 0 AND id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 查询所有启用的角色 -->
+    <select id="selectEnabledRoles" resultMap="RoleResult">
+        SELECT <include refid="Base_Column_List"/>
+        FROM sys_role
+        WHERE deleted = 0 AND status = 1
+        ORDER BY sort_order ASC, create_time ASC
+    </select>
+
+    <!-- 根据用户ID查询角色列表 -->
+    <select id="selectRolesByUserId" resultMap="RoleResult">
+        SELECT r.<include refid="Base_Column_List"/>
+        FROM sys_role r
+        INNER JOIN sys_user_role ur ON r.id = ur.role_id
+        WHERE r.deleted = 0 AND ur.deleted = 0 AND ur.user_id = #{userId}
+        ORDER BY r.sort_order ASC, r.create_time ASC
+    </select>
+
+</mapper>
