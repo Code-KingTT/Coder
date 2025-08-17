@@ -66,7 +66,12 @@ public enum ResultCode {
     /**
      * 操作失败
      */
-    OPERATION_FAILED(603, "操作失败");
+    OPERATION_FAILED(603, "操作失败"),
+
+    /**
+     * 登录失败
+     */
+    LOGIN_ERROR(605, "用户名或密码错误");
 
     /**
      * 状态码
