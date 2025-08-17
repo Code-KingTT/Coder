@@ -8,11 +8,16 @@ import com.coder.entity.User;
 import com.coder.exception.BusinessException;
 import com.coder.mapper.UserMapper;
 import com.coder.result.ResultCode;
+import com.coder.service.MenuService;
+import com.coder.service.RoleService;
 import com.coder.service.UserService;
-import com.coder.utils.DateUtils;
+
 import com.coder.utils.EncryptUtils;
 import com.coder.utils.RedisUtils;
 import com.coder.utils.StrUtils;
+import com.coder.vo.MenuTreeVO;
+import com.coder.vo.RoleVO;
+import com.coder.vo.UserPermissionVO;
 import com.coder.vo.UserVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -27,6 +32,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 用户服务实现类
@@ -44,7 +50,54 @@ public class UserServiceImpl implements UserService {
     @Resource
     private RedisUtils redisUtils;
 
+    @Resource
+    private RoleService roleService;
+
+    @Resource
+    private MenuService menuService;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Override
+    public Boolean validatePassword(String username, String password) {
+        log.info("验证用户密码，用户名：{}", username);
+
+        if (StrUtils.isBlank(username) || StrUtils.isBlank(password)) {
+            log.warn("用户名或密码为空");
+            return false;
+        }
+
+        try {
+            // 查询用户信息
+            User user = userMapper.selectByUsername(username);
+            if (user == null) {
+                log.warn("用户不存在，用户名：{}", username);
+                return false;
+            }
+
+            // 检查用户状态
+            if (user.getStatus() == null || user.getStatus() != Constants.ENABLED) {
+                log.warn("用户账户被禁用，用户名：{}", username);
+                return false;
+            }
+
+            // 验证密码：用户输入密码+盐值 与 数据库加密密码比较
+            String saltedPassword = password + user.getSalt();
+            boolean matches = passwordEncoder.matches(saltedPassword, user.getPassword());
+
+            if (matches) {
+                log.info("密码验证成功，用户名：{}", username);
+            } else {
+                log.warn("密码验证失败，用户名：{}", username);
+            }
+
+            return matches;
+
+        } catch (Exception e) {
+            log.error("验证用户密码失败，用户名：{}，错误：{}", username, e.getMessage(), e);
+            return false;
+        }
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -75,8 +128,8 @@ public class UserServiceImpl implements UserService {
         user.setDeleted(Constants.NOT_DELETED);
 
         // 设置创建信息
-        user.setCreateTime(DateUtils.now());
-        user.setCreateBy(createDTO.getOperatorId() != null ? createDTO.getOperatorId() : 1L);
+        Long operatorId = createDTO.getOperatorId() != null ? createDTO.getOperatorId() : 1L;
+        user.setCreateInfo(operatorId);
 
         int result = userMapper.insert(user);
         if (result <= 0) {
@@ -133,8 +186,10 @@ public class UserServiceImpl implements UserService {
         // 构建更新实体
         User user = new User();
         BeanUtils.copyProperties(updateDTO, user);
-        user.setUpdateTime(DateUtils.now());
-        user.setUpdateBy(updateDTO.getOperatorId() != null ? updateDTO.getOperatorId() : 1L);
+        
+        // 设置更新信息（自动设置updateTime和updateBy）
+        Long operatorId = updateDTO.getOperatorId() != null ? updateDTO.getOperatorId() : 1L;
+        user.setUpdateInfo(operatorId);
 
         int result = userMapper.updateById(user);
         if (result <= 0) {
@@ -301,5 +356,83 @@ public class UserServiceImpl implements UserService {
 
             log.debug("清除用户缓存，用户ID：{}", userId);
         }
+    }
+
+    @Override
+    public UserVO getUserByUsername(String username) {
+        log.info("根据用户名查询用户，用户名：{}", username);
+
+        if (StrUtils.isBlank(username)) {
+            throw new BusinessException(ResultCode.PARAM_ERROR, "用户名不能为空");
+        }
+
+        User user = userMapper.selectByUsername(username);
+        if (user == null) {
+            throw new BusinessException(ResultCode.DATA_NOT_EXISTS, "用户不存在");
+        }
+
+        return convertToVO(user);
+    }
+
+    @Override
+    public UserPermissionVO getUserPermissionInfo(Long userId) {
+        log.info("根据用户ID查询用户完整权限信息，用户ID：{}", userId);
+
+        if (userId == null) {
+            throw new BusinessException(ResultCode.PARAM_ERROR, "用户ID不能为空");
+        }
+
+        // 先从缓存获取
+        String cacheKey = Constants.CacheKey.USER_PREFIX + "permission_info:" + userId;
+        UserPermissionVO cached = redisUtils.get(cacheKey, UserPermissionVO.class);
+        if (cached != null) {
+            log.debug("从缓存获取用户权限信息，用户ID：{}", userId);
+            return cached;
+        }
+
+        // 查询用户基本信息
+        UserVO user = getUserById(userId);
+        if (user == null) {
+            throw new BusinessException(ResultCode.DATA_NOT_EXISTS, "用户不存在");
+        }
+
+        // 构建用户权限信息
+        UserPermissionVO permissionVO = new UserPermissionVO();
+        permissionVO.setUserId(userId);
+        permissionVO.setUsername(user.getUsername());
+        permissionVO.setNickname(user.getNickname());
+
+        try {
+            // 查询用户角色信息
+            List<RoleVO> roles = roleService.getRolesByUserId(userId);
+            permissionVO.setRoles(roles);
+
+            // 提取角色编码
+            List<String> roleCodes = roles.stream()
+                    .map(RoleVO::getRoleCode)
+                    .collect(Collectors.toList());
+            permissionVO.setRoleCodes(roleCodes);
+
+            // 查询用户菜单树
+            List<MenuTreeVO> menuTree = menuService.getMenuTreeByUserId(userId);
+            permissionVO.setMenuTree(menuTree);
+
+            // 查询用户权限标识
+            List<String> permissions = menuService.getPermissionsByUserId(userId);
+            permissionVO.setPermissions(permissions);
+
+        } catch (Exception e) {
+            log.error("查询用户权限信息失败，用户ID：{}，错误：{}", userId, e.getMessage(), e);
+            // 如果查询权限失败，返回基础信息，避免影响认证
+            permissionVO.setRoles(new ArrayList<>());
+            permissionVO.setRoleCodes(new ArrayList<>());
+            permissionVO.setMenuTree(new ArrayList<>());
+            permissionVO.setPermissions(new ArrayList<>());
+        }
+
+        // 缓存用户权限信息，过期时间30分钟
+        redisUtils.set(cacheKey, permissionVO, 30, TimeUnit.MINUTES);
+
+        return permissionVO;
     }
 }

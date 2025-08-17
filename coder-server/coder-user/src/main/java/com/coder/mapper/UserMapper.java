@@ -82,3 +82,5 @@ public interface UserMapper {
      */
     int deleteBatchByIds(@Param("ids") List<Long> ids, @Param("updateBy") Long updateBy);
 }
+
+

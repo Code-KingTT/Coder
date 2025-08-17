@@ -5,6 +5,7 @@ import com.coder.dto.UserQueryDTO;
 import com.coder.dto.UserUpdateDTO;
 import com.coder.result.Result;
 import com.coder.service.UserService;
+import com.coder.vo.UserPermissionVO;
 import com.coder.vo.UserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,12 +30,23 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/coder/user")
 @Api(tags = "用户管理")
 public class UserController {
 
     @Resource
     private UserService userService;
+
+    @PostMapping("/validate-password")
+    @ApiOperation("验证用户密码")
+    public Result<Boolean> validatePassword(
+            @ApiParam(value = "用户名", required = true)
+            @RequestParam @NotNull(message = "用户名不能为空") String username,
+            @ApiParam(value = "密码", required = true)
+            @RequestParam @NotNull(message = "密码不能为空") String password) {
+        Boolean result = userService.validatePassword(username, password);
+        return Result.success("验证完成", result);
+    }
 
     @PostMapping("/create")
     @ApiOperation("创建用户")
@@ -91,5 +103,23 @@ public class UserController {
             @RequestParam @NotNull(message = "用户名不能为空") String username) {
         Boolean exists = userService.checkUsernameExists(username);
         return Result.success("查询成功", exists);
+    }
+
+    @GetMapping("/get-by-username")
+    @ApiOperation("根据用户名查询用户")
+    public Result<UserVO> getUserByUsername(
+            @ApiParam(value = "用户名", required = true)
+            @RequestParam @NotNull(message = "用户名不能为空") String username) {
+        UserVO userVO = userService.getUserByUsername(username);
+        return Result.success("查询成功", userVO);
+    }
+
+    @GetMapping("/{userId}/permission-info")
+    @ApiOperation("根据用户ID查询用户完整权限信息")
+    public Result<UserPermissionVO> getUserPermissionInfo(
+            @ApiParam(value = "用户ID", required = true)
+            @PathVariable @NotNull(message = "用户ID不能为空") Long userId) {
+        UserPermissionVO permissionVO = userService.getUserPermissionInfo(userId);
+        return Result.success("查询成功", permissionVO);
     }
 }

@@ -3,6 +3,7 @@ package com.coder.service;
 import com.coder.dto.UserCreateDTO;
 import com.coder.dto.UserQueryDTO;
 import com.coder.dto.UserUpdateDTO;
+import com.coder.vo.UserPermissionVO;
 import com.coder.vo.UserVO;
 import com.github.pagehelper.PageInfo;
 
@@ -15,6 +16,15 @@ import java.util.List;
  * @date 2025-08-15
  */
 public interface UserService {
+
+    /**
+     * 验证用户密码
+     *
+     * @param username 用户名
+     * @param password 明文密码
+     * @return 是否验证通过
+     */
+    Boolean validatePassword(String username, String password);
 
     /**
      * 创建用户
@@ -79,4 +89,14 @@ public interface UserService {
      * @return 是否存在
      */
     Boolean checkUsernameExists(String username);
+
+    /**
+     * 根据用户名查询用户
+     */
+    UserVO getUserByUsername(String username);
+
+    /**
+     * 根据用户ID查询用户完整权限信息
+     */
+    UserPermissionVO getUserPermissionInfo(Long userId);
 }

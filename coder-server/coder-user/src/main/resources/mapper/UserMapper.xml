@@ -139,14 +139,14 @@
     </update>
 
     <!-- 根据ID查询用户 -->
-    <select id="selectById" resultType="UserResult">
+    <select id="selectById" resultMap="UserResult">
         SELECT <include refid="Select_Column_List"/>
         FROM sys_user
         WHERE id = #{id} AND deleted = 0
     </select>
 
     <!-- 根据用户名查询用户 -->
-    <select id="selectByUsername" resultType="UserResult">
+    <select id="selectByUsername" resultMap="UserResult">
         SELECT <include refid="Base_Column_List"/>
         FROM sys_user
         WHERE username = #{username} AND deleted = 0

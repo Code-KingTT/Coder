@@ -150,7 +150,7 @@ public class User extends BaseEntity {
     /**
      * 最后登录时间
      */
-    @ApiModelProperty(value = "最后登录时间", example = "2025-01-27 10:30:00")
+    @ApiModelProperty(value = "最后登录时间", example = "2025-8-17 10:30:00")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime lastLoginTime;
 
@@ -271,7 +271,7 @@ public class User extends BaseEntity {
      *
      * @return true-启用，false-未启用
      */
-    public boolean isTwoFactorEnabled() {
+    public boolean hasTwoFactorEnabled() {
         return Integer.valueOf(1).equals(this.twoFactorEnabled);
     }
 
