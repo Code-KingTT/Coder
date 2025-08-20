@@ -5,7 +5,7 @@ server:
 spring:
   datasource:
     # 数据库连接URL及参数优化
-    url: jdbc:mysql://localhost:3306/coder_dev?useUnicode=true&characterEncoding=utf8mb4&useSSL=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/coder?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:WTT713}
     driver-class-name: com.mysql.cj.jdbc.Driver
