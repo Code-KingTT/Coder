@@ -49,6 +49,11 @@ public enum ResultCode {
     REQUEST_TIMEOUT(408, "请求超时"),
 
     /**
+     * 服务暂时不可用
+     */
+    SERVICE_UNAVAILABLE(409, "服务暂时不可用"),
+
+    /**
      * 业务异常
      */
     BUSINESS_ERROR(600, "业务异常"),
