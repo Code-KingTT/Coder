@@ -183,55 +183,95 @@ CREATE TABLE `sys_role_menu`
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色菜单关联表';
 
+-- ======================================
+-- 初始化数据
+-- ======================================
 
 -- 初始化角色数据
-INSERT INTO `sys_role` (`role_code`, `role_name`, `role_desc`, `sort_order`, `status`, `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`)
+INSERT INTO `sys_role` (`id`, `role_code`, `role_name`, `role_desc`, `sort_order`, `status`, `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`)
 VALUES
-    ('ADMIN', '系统管理员', '拥有系统所有权限', 1, 1, NOW(), NOW(), 1, 1, 0, '系统管理员角色'),
-    ('USER', '普通用户', '普通用户权限', 2, 1, NOW(), NOW(), 1, 1, 0, '普通用户角色');
+    (1, 'ADMIN', '超级管理员', '拥有系统所有权限', 1, 1, NOW(), NOW(), 1, 1, 0, '系统管理员角色'),
+    (2, 'USER_MANAGER', '用户管理员', '负责用户管理相关功能', 2, 1, NOW(), NOW(), 1, 1, 0, '用户管理员角色'),
+    (3, 'ORDINARY_USER', '普通用户', '普通用户权限', 3, 1, NOW(), NOW(), 1, 1, 0, '普通用户角色');
 
--- 初始化菜单数据
-INSERT INTO `sys_menu` (`menu_name`, `parent_id`, `menu_type`, `path`, `component`, `permission`, `icon`, `sort_order`, `visible`, `status`, `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`)
+-- 初始化菜单数据（基于当前项目存在的接口）
+INSERT INTO `sys_menu` (`id`, `menu_name`, `parent_id`, `menu_type`, `path`, `component`, `permission`, `icon`, `sort_order`, `visible`, `status`, `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`)
 VALUES
 -- 系统管理目录
-(1, '系统管理', 0, 1, '/system', 'Layout', 'system', 'el-icon-setting', 1, 1, 1, NOW(), NOW(), 1, 1, 0, '系统管理目录'),
+(1, '系统管理', 0, 1, '/system', 'Layout', NULL, 'system', 1, 1, 1, NOW(), NOW(), 1, 1, 0, '系统管理目录'),
 
--- 用户管理菜单
-(2, '用户管理', 1, 2, '/system/user', 'system/user/index', 'system:user:list', 'el-icon-user', 1, 1, 1, NOW(), NOW(), 1, 1, 0, '用户管理菜单'),
-(3, '用户新增', 2, 3, '', '', 'system:user:add', '', 1, 0, 1, NOW(), NOW(), 1, 1, 0, '用户新增按钮'),
-(4, '用户修改', 2, 3, '', '', 'system:user:edit', '', 2, 0, 1, NOW(), NOW(), 1, 1, 0, '用户修改按钮'),
-(5, '用户删除', 2, 3, '', '', 'system:user:delete', '', 3, 0, 1, NOW(), NOW(), 1, 1, 0, '用户删除按钮'),
+-- 用户管理菜单（基于UserController）
+(10, '用户管理', 1, 2, '/system/user', 'system/user/index', 'system:user:list', 'user', 1, 1, 1, NOW(), NOW(), 1, 1, 0, '用户管理菜单'),
+(11, '用户查询', 10, 3, '', '', 'system:user:query', '', 1, 0, 1, NOW(), NOW(), 1, 1, 0, '用户查询按钮'),
+(12, '用户新增', 10, 3, '', '', 'system:user:add', '', 2, 0, 1, NOW(), NOW(), 1, 1, 0, '用户新增按钮'),
+(13, '用户修改', 10, 3, '', '', 'system:user:update', '', 3, 0, 1, NOW(), NOW(), 1, 1, 0, '用户修改按钮'),
+(14, '用户删除', 10, 3, '', '', 'system:user:delete', '', 4, 0, 1, NOW(), NOW(), 1, 1, 0, '用户删除按钮'),
+(15, '用户状态', 10, 3, '', '', 'system:user:status', '', 5, 0, 1, NOW(), NOW(), 1, 1, 0, '用户状态修改按钮'),
+(16, '重置密码', 10, 3, '', '', 'system:user:resetPwd', '', 6, 0, 1, NOW(), NOW(), 1, 1, 0, '重置密码按钮'),
+(17, '用户导出', 10, 3, '', '', 'system:user:export', '', 7, 0, 1, NOW(), NOW(), 1, 1, 0, '用户导出按钮'),
+(18, '用户导入', 10, 3, '', '', 'system:user:import', '', 8, 0, 1, NOW(), NOW(), 1, 1, 0, '用户导入按钮'),
 
--- 角色管理菜单
-(6, '角色管理', 1, 2, '/system/role', 'system/role/index', 'system:role:list', 'el-icon-s-custom', 2, 1, 1, NOW(), NOW(), 1, 1, 0, '角色管理菜单'),
-(7, '角色新增', 6, 3, '', '', 'system:role:add', '', 1, 0, 1, NOW(), NOW(), 1, 1, 0, '角色新增按钮'),
-(8, '角色修改', 6, 3, '', '', 'system:role:edit', '', 2, 0, 1, NOW(), NOW(), 1, 1, 0, '角色修改按钮'),
-(9, '角色删除', 6, 3, '', '', 'system:role:delete', '', 3, 0, 1, NOW(), NOW(), 1, 1, 0, '角色删除按钮'),
+-- 菜单管理菜单（基于MenuController）
+(20, '菜单管理', 1, 2, '/system/menu', 'system/menu/index', 'system:menu:list', 'tree-table', 2, 1, 1, NOW(), NOW(), 1, 1, 0, '菜单管理菜单'),
+(21, '菜单查询', 20, 3, '', '', 'system:menu:query', '', 1, 0, 1, NOW(), NOW(), 1, 1, 0, '菜单查询按钮'),
+(22, '菜单新增', 20, 3, '', '', 'system:menu:add', '', 2, 0, 1, NOW(), NOW(), 1, 1, 0, '菜单新增按钮'),
+(23, '菜单修改', 20, 3, '', '', 'system:menu:update', '', 3, 0, 1, NOW(), NOW(), 1, 1, 0, '菜单修改按钮'),
+(24, '菜单删除', 20, 3, '', '', 'system:menu:delete', '', 4, 0, 1, NOW(), NOW(), 1, 1, 0, '菜单删除按钮'),
 
--- 菜单管理菜单
-(10, '菜单管理', 1, 2, '/system/menu', 'system/menu/index', 'system:menu:list', 'el-icon-menu', 3, 1, 1, NOW(), NOW(), 1, 1, 0, '菜单管理菜单'),
-(11, '菜单新增', 10, 3, '', '', 'system:menu:add', '', 1, 0, 1, NOW(), NOW(), 1, 1, 0, '菜单新增按钮'),
-(12, '菜单修改', 10, 3, '', '', 'system:menu:edit', '', 2, 0, 1, NOW(), NOW(), 1, 1, 0, '菜单修改按钮'),
-(13, '菜单删除', 10, 3, '', '', 'system:menu:delete', '', 3, 0, 1, NOW(), NOW(), 1, 1, 0, '菜单删除按钮');
+-- 个人中心菜单
+(30, '个人中心', 0, 2, '/profile', 'system/user/profile/index', 'system:user:profile', 'user', 3, 1, 1, NOW(), NOW(), 1, 1, 0, '个人中心菜单');
 
--- 给管理员分配角色
-INSERT INTO `sys_user_role` (`user_id`, `role_id`, `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`)
-VALUES (1, 1, NOW(), NOW(), 1, 1, 0, '管理员角色分配');
-
--- 给管理员角色分配所有菜单权限
+-- 给超级管理员角色分配所有权限
 INSERT INTO `sys_role_menu` (`role_id`, `menu_id`, `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`)
 VALUES
-    (1, 1, NOW(), NOW(), 1, 1, 0, '系统管理目录'),
-    (1, 2, NOW(), NOW(), 1, 1, 0, '用户管理菜单'),
-    (1, 3, NOW(), NOW(), 1, 1, 0, '用户新增按钮'),
-    (1, 4, NOW(), NOW(), 1, 1, 0, '用户修改按钮'),
-    (1, 5, NOW(), NOW(), 1, 1, 0, '用户删除按钮'),
-    (1, 6, NOW(), NOW(), 1, 1, 0, '角色管理菜单'),
-    (1, 7, NOW(), NOW(), 1, 1, 0, '角色新增按钮'),
-    (1, 8, NOW(), NOW(), 1, 1, 0, '角色修改按钮'),
-    (1, 9, NOW(), NOW(), 1, 1, 0, '角色删除按钮'),
-    (1, 10, NOW(), NOW(), 1, 1, 0, '菜单管理菜单'),
-    (1, 11, NOW(), NOW(), 1, 1, 0, '菜单新增按钮'),
-    (1, 12, NOW(), NOW(), 1, 1, 0, '菜单修改按钮'),
-    (1, 13, NOW(), NOW(), 1, 1, 0, '菜单删除按钮');
+-- 系统管理
+(1, 1, NOW(), NOW(), 1, 1, 0, '系统管理目录'),
+-- 用户管理
+(1, 10, NOW(), NOW(), 1, 1, 0, '用户管理菜单'),
+(1, 11, NOW(), NOW(), 1, 1, 0, '用户查询'),
+(1, 12, NOW(), NOW(), 1, 1, 0, '用户新增'),
+(1, 13, NOW(), NOW(), 1, 1, 0, '用户修改'),
+(1, 14, NOW(), NOW(), 1, 1, 0, '用户删除'),
+(1, 15, NOW(), NOW(), 1, 1, 0, '用户状态'),
+(1, 16, NOW(), NOW(), 1, 1, 0, '重置密码'),
+(1, 17, NOW(), NOW(), 1, 1, 0, '用户导出'),
+(1, 18, NOW(), NOW(), 1, 1, 0, '用户导入'),
+-- 菜单管理
+(1, 20, NOW(), NOW(), 1, 1, 0, '菜单管理菜单'),
+(1, 21, NOW(), NOW(), 1, 1, 0, '菜单查询'),
+(1, 22, NOW(), NOW(), 1, 1, 0, '菜单新增'),
+(1, 23, NOW(), NOW(), 1, 1, 0, '菜单修改'),
+(1, 24, NOW(), NOW(), 1, 1, 0, '菜单删除'),
+-- 个人中心
+(1, 30, NOW(), NOW(), 1, 1, 0, '个人中心');
+
+-- 给用户管理员角色分配用户管理权限
+INSERT INTO `sys_role_menu` (`role_id`, `menu_id`, `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`)
+VALUES
+    (2, 1, NOW(), NOW(), 1, 1, 0, '系统管理目录'),
+    (2, 10, NOW(), NOW(), 1, 1, 0, '用户管理菜单'),
+    (2, 11, NOW(), NOW(), 1, 1, 0, '用户查询'),
+    (2, 12, NOW(), NOW(), 1, 1, 0, '用户新增'),
+    (2, 13, NOW(), NOW(), 1, 1, 0, '用户修改'),
+    (2, 15, NOW(), NOW(), 1, 1, 0, '用户状态'),
+    (2, 16, NOW(), NOW(), 1, 1, 0, '重置密码'),
+    (2, 30, NOW(), NOW(), 1, 1, 0, '个人中心');
+
+-- 给普通用户角色分配基础权限
+INSERT INTO `sys_role_menu` (`role_id`, `menu_id`, `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`)
+VALUES
+    (3, 30, NOW(), NOW(), 1, 1, 0, '个人中心');
+
+-- 初始化测试用户
+INSERT INTO `sys_user` (`id`, `username`, `password`, `salt`, `nickname`, `real_name`, `email`, `mobile`, `gender`, `status`, `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`)
+VALUES
+    (2, 'user_manager', '$2a$10$7JB720yubVSOfvVWdF3iVu9S56RYNcP6bPT0UVc1JaDkHY1qnJdV6', 'user_manager_salt', '用户管理员', '张三', 'usermanager@example.com', '13800138001', 1, 1, NOW(), NOW(), 1, 1, 0, '用户管理员账户'),
+    (3, 'ordinary_user', '$2a$10$7JB720yubVSOfvVWdF3iVu9S56RYNcP6bPT0UVc1JaDkHY1qnJdV6', 'ordinary_user_salt', '普通用户', '李四', 'user@example.com', '13800138002', 2, 1, NOW(), NOW(), 1, 1, 0, '普通用户账户');
+
+-- 分配用户角色
+INSERT INTO `sys_user_role` (`user_id`, `role_id`, `create_time`, `update_time`, `create_by`, `update_by`, `deleted`, `remark`)
+VALUES
+    (1, 1, NOW(), NOW(), 1, 1, 0, 'admin用户分配超级管理员角色'),
+    (2, 2, NOW(), NOW(), 1, 1, 0, 'user_manager用户分配用户管理员角色'),
+    (3, 3, NOW(), NOW(), 1, 1, 0, 'ordinary_user用户分配普通用户角色');
 
