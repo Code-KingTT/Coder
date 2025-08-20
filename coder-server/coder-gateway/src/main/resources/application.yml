@@ -14,6 +14,11 @@ spring:
         group: DEFAULT_GROUP
 
     gateway:
+      # 全局超时配置
+      httpclient:
+        connect-timeout: 3000
+        response-timeout: 10s
+
       # 路由配置
       routes:
         # 认证服务路由

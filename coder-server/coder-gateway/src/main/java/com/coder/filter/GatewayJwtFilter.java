@@ -113,6 +113,7 @@ public class GatewayJwtFilter implements GlobalFilter, Ordered {
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
 
+        // 使用统一的响应格式
         Map<String, Object> result = new HashMap<>();
         result.put("code", 401);
         result.put("message", message);
