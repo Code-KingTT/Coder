@@ -25,10 +25,12 @@ public class EmailServiceImpl implements EmailService {
     @Resource
     private JavaMailSender mailSender;
 
-    @Value("${mail.from.address}")
+//    @Value("${mail.from.address}")
+    @Value("${spring.mail.username}")
     private String fromAddress;
 
-    @Value("${mail.from.name}")
+//    @Value("${mail.from.name}")
+//    @Value("${mail.from.name}")
     private String fromName;
 
     @Override
@@ -37,8 +39,9 @@ public class EmailServiceImpl implements EmailService {
         
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            String from = String.format("%s <%s>", fromName, fromAddress);
-            message.setFrom(from);
+//            String from = String.format("%s <%s>", fromName, fromAddress);
+//            message.setFrom(from);
+            message.setFrom(fromAddress);
             message.setTo(to);
             message.setSubject(subject);
             message.setText(content);

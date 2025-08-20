@@ -19,8 +19,8 @@ spring:
   redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
-    password: ${REDIS_PASSWORD:Sunset}
-    database: ${REDIS_DATABASE:1}  # 使用不同的数据库
+    password: ${REDIS_PASSWORD:}
+    database: ${REDIS_DATABASE:0}  # 使用不同的数据库
     timeout: 5000ms
     jedis:
       pool:
@@ -33,37 +33,38 @@ spring:
   # 邮件配置
   mail:
     host: smtp.163.com
-    port: 587
-    username: ${MAIL_USERNAME:your-email@qq.com} # 发送邮箱
-    password: ${MAIL_PASSWORD:your-mail-password} # 邮箱授权码
+    port: 25
+    username: ${MAIL_USERNAME:kingzs713@163.com}
+    password: ${MAIL_PASSWORD:DDhyz7rRGjnWBGjx}
+
     default-encoding: UTF-8
     protocol: smtp
-    test-connection: true
+    test-connection: false
     properties:
       mail:
         smtp:
-          # 启用SMTP认证
           auth: true
           starttls:
-            # 启用STARTTLS加密
             enable: true
-            # 强制要求STARTTLS
-            required: true
-          connectiontimeout: 10000
-          timeout: 10000
-          writetimeout: 10000
-          # 163邮箱特殊配置
+            required: false
           ssl:
             enable: false
+          connectiontimeout: 30000
+          timeout: 30000
+          writetimeout: 30000
+
+  autoconfigure:
+    exclude:
+      - org.apache.shiro.spring.boot.autoconfigure.ShiroAutoConfiguration
 
 # 自定义邮件配置
-mail:
-  # 发送方信息
-  from:
-    # 发送方邮箱
-    address: ${MAIL_FROM_ADDRESS:life@coder.com}
-    # 发送方名称
-    name: ${MAIL_FROM_NAME:Coder}
+#mail:
+#  # 发送方信息
+#  from:
+#    # 发送方邮箱
+#    address: ${MAIL_FROM_ADDRESS:life@coder.com}
+#    # 发送方名称
+#    name: ${MAIL_FROM_NAME:Coder}
 
 # MyBatis-Plus配置
 mybatis-plus:
@@ -91,8 +92,8 @@ shiro:
 
 # JWT配置
 jwt:
-  # 密钥（建议生产环境使用更复杂的密钥）
-  secret: coderServerSecretKeyForJWT2025
+  # 密钥
+  secret: coderServerSecretKeyKingZS20000713Sunset
   # 过期时间（秒）7天
   expiration: 604800
   # Token前缀
