@@ -3,7 +3,7 @@
 <mapper namespace="com.coder.mapper.UserRoleMapper">
 
     <!-- 用户角色结果映射 -->
-    <resultMap type="UserRole" id="UserRoleResult">
+    <resultMap type="com.coder.entity.UserRole" id="UserRoleResult">
         <id property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="roleId" column="role_id"/>
@@ -48,7 +48,7 @@
     </sql>
 
     <!-- 插入用户角色关联 -->
-    <insert id="insert" parameterType="UserRole" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.coder.entity.UserRole" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO sys_user_role (
             user_id, role_id, create_time, update_time, create_by, update_by, deleted, remark
         ) VALUES (

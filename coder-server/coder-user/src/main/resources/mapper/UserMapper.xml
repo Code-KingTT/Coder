@@ -3,7 +3,7 @@
 <mapper namespace="com.coder.mapper.UserMapper">
 
     <!-- 用户结果映射 -->
-    <resultMap type="User" id="UserResult">
+    <resultMap type="com.coder.entity.User" id="UserResult">
         <id property="id" column="id"/>
         <result property="username" column="username"/>
         <result property="password" column="password"/>
@@ -89,7 +89,7 @@
     </sql>
 
     <!-- 插入用户 -->
-    <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.coder.entity.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO sys_user (
             username, password, salt, nickname, real_name, mobile, email,
             province, city, district, address, avatar, gender, birthday, profile,
@@ -115,7 +115,7 @@
     </update>
 
     <!-- 更新用户 -->
-    <update id="updateById" parameterType="User">
+    <update id="updateById" parameterType="com.coder.entity.User">
         UPDATE sys_user
         <set>
             <if test="nickname != null">nickname = #{nickname},</if>
@@ -177,4 +177,17 @@
         </foreach>
     </update>
 
+    <!-- 根据邮箱查询用户 -->
+    <select id="selectByEmail" resultMap="UserResult">
+        SELECT <include refid="Base_Column_List"></include>
+        FROM sys_user
+        WHERE email = #{email} AND deleted = 0
+    </select>
+
+    <!-- 根据邮箱修改密码 -->
+    <update id="updatePasswordByEmail">
+        UPDATE sys_user
+        SET password = #{password}, salt = #{salt}, update_time = NOW(), update_by = 1
+        WHERE email = #{email}
+    </update>
 </mapper>

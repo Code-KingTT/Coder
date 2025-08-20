@@ -3,7 +3,7 @@
 <mapper namespace="com.coder.mapper.RoleMapper">
 
     <!-- 角色结果映射 -->
-    <resultMap type="Role" id="RoleResult">
+    <resultMap type="com.coder.entity.Role" id="RoleResult">
         <id property="id" column="id"/>
         <result property="roleCode" column="role_code"/>
         <result property="roleName" column="role_name"/>
@@ -41,7 +41,7 @@
     </sql>
 
     <!-- 插入角色 -->
-    <insert id="insert" parameterType="Role" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.coder.entity.Role" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO sys_role (
             role_code, role_name, role_desc, sort_order, status,
             create_time, update_time, create_by, update_by, deleted, remark
@@ -59,7 +59,7 @@
     </update>
 
     <!-- 更新角色 -->
-    <update id="updateById" parameterType="Role">
+    <update id="updateById" parameterType="com.coder.entity.Role">
         UPDATE sys_role
         <set>
             <if test="roleCode != null">role_code = #{roleCode},</if>

@@ -3,7 +3,7 @@
 <mapper namespace="com.coder.mapper.RoleMenuMapper">
 
     <!-- 角色菜单结果映射 -->
-    <resultMap type="RoleMenu" id="RoleMenuResult">
+    <resultMap type="com.coder.entity.RoleMenu" id="RoleMenuResult">
         <id property="id" column="id"/>
         <result property="roleId" column="role_id"/>
         <result property="menuId" column="menu_id"/>
@@ -49,7 +49,7 @@
     </sql>
 
     <!-- 插入角色菜单关联 -->
-    <insert id="insert" parameterType="RoleMenu" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.coder.entity.RoleMenu" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO sys_role_menu (
             role_id, menu_id, create_time, update_time, create_by, update_by, deleted, remark
         ) VALUES (
