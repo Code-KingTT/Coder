@@ -36,7 +36,7 @@ public class JwtRealm extends AuthorizingRealm {
     private UserServiceClient userServiceClient;
 
     /**
-     * 指定支持的Token类型 - 只支持JwtToken
+     * 指定支持的Token类型
      */
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -49,11 +49,9 @@ public class JwtRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        log.debug("JwtRealm开始授权...");
 
         // 获取用户名
         String username = (String) principals.getPrimaryPrincipal();
-        log.debug("当前用户: {}", username);
 
         try {
             // 查询用户信息
@@ -105,7 +103,6 @@ public class JwtRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken auth) throws AuthenticationException {
-        log.debug("JwtRealm开始认证...");
 
         JwtToken jwtToken = (JwtToken) auth;
         String token = jwtToken.getToken();
@@ -144,8 +141,6 @@ public class JwtRealm extends AuthorizingRealm {
             if (!jwtUtils.validateToken(token, username)) {
                 throw new AuthenticationException("Token验证失败");
             }
-
-            log.debug("JWT认证成功: {}", username);
 
             // 返回认证信息
             return new SimpleAuthenticationInfo(

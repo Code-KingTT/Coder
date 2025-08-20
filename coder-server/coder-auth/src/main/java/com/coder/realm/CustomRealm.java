@@ -108,13 +108,10 @@ public class CustomRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        log.debug("CustomRealm开始认证...");
 
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
         String username = upToken.getUsername();
         String password = String.valueOf(upToken.getPassword());
-
-        log.debug("认证用户: {}", username);
 
         try {
             // 查询用户信息
@@ -132,16 +129,14 @@ public class CustomRealm extends AuthorizingRealm {
                 throw new DisabledAccountException("账户被禁用");
             }
 
-            // 🔑 关键：调用用户服务验证密码
+            // 验证密码
             Result<Boolean> passwordResult = userServiceClient.validatePassword(username, password);
             if (passwordResult == null || !passwordResult.isSuccess() || !Boolean.TRUE.equals(passwordResult.getData())) {
                 log.warn("密码验证失败: {}", username);
                 throw new IncorrectCredentialsException("密码错误");
             }
 
-            log.debug("用户认证成功: {}", username);
-
-            // 返回认证信息 - 密码已验证，这里可以返回任意值
+            // 返回认证信息
             return new SimpleAuthenticationInfo(
                     username,                           // 用户名作为principal
                     password,                          // 已验证的密码

@@ -8,6 +8,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
@@ -26,6 +27,7 @@ import java.util.Map;
  * @date 2025-8-17
  */
 @Slf4j
+@Component
 public class JwtAuthenticationFilter extends AuthenticatingFilter {
 
     @Resource
@@ -51,8 +53,16 @@ public class JwtAuthenticationFilter extends AuthenticatingFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String requestURI = httpRequest.getRequestURI();
+
         // 检查是否是OPTIONS请求，如果是则直接放行
         if (isOptionsRequest(request)) {
+            return true;
+        }
+
+        // 检查是否是匿名访问路径，如果是则直接放行
+        if (isAnonymousPath(requestURI)) {
             return true;
         }
 
@@ -67,7 +77,38 @@ public class JwtAuthenticationFilter extends AuthenticatingFilter {
                 return false;
             }
         }
-        
+        return false;
+    }
+
+    /**
+     * 检查是否是匿名访问路径
+     */
+    private boolean isAnonymousPath(String requestURI) {
+        String[] anonymousPaths = {
+                "/coder/auth/login",
+                "/coder/auth/register",
+                "/coder/auth/forgot-password",
+                "/coder/auth/reset-password",
+                "/coder/auth/send-email-code",
+                "/static/",
+                "/favicon.ico",
+                "/swagger-ui/",
+                "/swagger-resources/",
+                "/swagger-resources",
+                "/webjars/",
+                "/v2/api-docs",
+                "/doc.html",
+                "/actuator/",
+                "/health"
+        };
+
+        for (String path : anonymousPaths) {
+            if (requestURI.equals(path) ||
+                    (path.endsWith("/") && requestURI.startsWith(path)) ||
+                    (!path.endsWith("/") && requestURI.startsWith(path + "/"))) {
+                return true;
+            }
+        }
         return false;
     }
 
