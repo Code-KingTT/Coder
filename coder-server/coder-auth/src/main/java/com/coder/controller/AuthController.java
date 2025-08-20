@@ -32,7 +32,7 @@ import javax.validation.constraints.NotBlank;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/coder/auth")
 @Api(tags = "用户认证")
 public class AuthController {
 
@@ -42,6 +42,11 @@ public class AuthController {
     @Resource
     private JwtUtils jwtUtils;
 
+    /**
+     * 用户登录
+     * @param loginDTO 登录请求DTO
+     * @return loginVO 登录响应VO
+     */
     @PostMapping("/login")
     @ApiOperation("用户登录")
     public Result<LoginVO> login(@Valid @RequestBody LoginDTO loginDTO) {
@@ -49,6 +54,11 @@ public class AuthController {
         return Result.success("登录成功", loginVO);
     }
 
+    /**
+     * 用户注册
+     * @param registerDTO 注册请求DTO
+     * @return message 注册响应信息
+     */
     @PostMapping("/register")
     @ApiOperation("用户注册")
     public Result<String> register(@Valid @RequestBody RegisterDTO registerDTO) {
@@ -56,6 +66,11 @@ public class AuthController {
         return Result.success(message);
     }
 
+    /**
+     * 用户登出
+     * @param request HttpServletRequest
+     * @return message 登出响应信息
+     */
     @PostMapping("/logout")
     @ApiOperation("用户登出")
     public Result<String> logout(HttpServletRequest request) {
@@ -73,6 +88,11 @@ public class AuthController {
         return Result.success(message);
     }
 
+    /**
+     * 忘记密码
+     * @param forgotPasswordDTO 忘记密码请求DTO
+     * @return message 忘记密码响应信息
+     */
     @PostMapping("/forgot-password")
     @ApiOperation("忘记密码")
     public Result<String> forgotPassword(@Valid @RequestBody ForgotPasswordDTO forgotPasswordDTO) {
@@ -80,6 +100,11 @@ public class AuthController {
         return Result.success(message);
     }
 
+    /**
+     * 重置密码
+     * @param resetPasswordDTO 重置密码请求DTO
+     * @return message 重置密码响应信息
+     */
     @PostMapping("/reset-password")
     @ApiOperation("重置密码")
     public Result<String> resetPassword(@Valid @RequestBody ResetPasswordDTO resetPasswordDTO) {
@@ -87,6 +112,12 @@ public class AuthController {
         return Result.success(message);
     }
 
+    /**
+     * 发送邮箱验证码
+     * @param email 邮箱地址
+     * @param type 验证码类型
+     * @return message 发送邮箱验证码响应信息
+     */
     @PostMapping("/send-email-code")
     @ApiOperation("发送邮箱验证码")
     public Result<String> sendEmailCode(
@@ -98,6 +129,11 @@ public class AuthController {
         return Result.success(message);
     }
 
+    /**
+     * 刷新Token
+     * @param request HttpServletRequest
+     * @return loginVO 登录响应VO
+     */
     @PostMapping("/refresh-token")
     @ApiOperation("刷新Token")
     public Result<LoginVO> refreshToken(HttpServletRequest request) {
@@ -108,6 +144,10 @@ public class AuthController {
         return Result.success("Token刷新成功", loginVO);
     }
 
+    /**
+     * 获取当前用户信息
+     * @return 响应信息
+     */
     @GetMapping("/user-info")
     @ApiOperation("获取当前用户信息")
     public Result<Object> getCurrentUserInfo() {
