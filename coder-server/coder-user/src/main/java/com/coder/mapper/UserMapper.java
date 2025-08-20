@@ -81,6 +81,23 @@ public interface UserMapper {
      * @return 影响行数
      */
     int deleteBatchByIds(@Param("ids") List<Long> ids, @Param("updateBy") Long updateBy);
+
+    /**
+     * 根据邮箱查询用户
+     *
+     * @param email 邮箱
+     * @return 用户实体
+     */
+    User selectByEmail(@Param("email") String email);
+
+    /**
+     * 根据邮箱修改用户密码
+     *
+     * @param email 邮箱
+     * @param password 密码
+     * @return 影响行数
+     */
+    int updatePasswordByEmail(@Param("email") String email, @Param("password") String password, @Param("salt")  String salt);
 }
 
 

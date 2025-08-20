@@ -23,6 +23,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,7 +116,8 @@ public class UserServiceImpl implements UserService {
 
         // 密码加密
         String salt = EncryptUtils.uuid().replace("-", "");
-        String encodedPassword = passwordEncoder.encode(createDTO.getPassword() + salt);
+        String saltedPassword = createDTO.getPassword() + salt;
+        String encodedPassword = passwordEncoder.encode(saltedPassword);
         user.setPassword(encodedPassword);
         user.setSalt(salt);
 
@@ -274,7 +276,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ResultCode.PARAM_ERROR, "用户ID列表不能为空");
         }
 
-        int result = userMapper.deleteBatchByIds(ids, 1L); // 系统默认操作人
+        int result = userMapper.deleteBatchByIds(ids, 1L);
         if (result <= 0) {
             throw new BusinessException(ResultCode.OPERATION_FAILED, "批量删除用户失败");
         }
@@ -288,6 +290,11 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    /**
+     * 检查用户名是否存在
+     * @param username 用户名
+     * @return 布尔值
+     */
     @Override
     public Boolean checkUsernameExists(String username) {
         if (StrUtils.isBlank(username)) {
@@ -358,6 +365,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * 根据用户名查询用户
+     */
     @Override
     public UserVO getUserByUsername(String username) {
         log.info("根据用户名查询用户，用户名：{}", username);
@@ -434,5 +444,73 @@ public class UserServiceImpl implements UserService {
         redisUtils.set(cacheKey, permissionVO, 30, TimeUnit.MINUTES);
 
         return permissionVO;
+    }
+
+    /**
+     * 根据邮箱查询用户
+     * @param email 用户邮箱
+     * @return UserVO 用户VO
+     */
+    @Override
+    public UserVO getUserByEmail(String email) {
+        log.info("根据邮箱查询用户，邮箱：{}", email);
+
+        if (StrUtils.isBlank(email)) {
+            throw new BusinessException(ResultCode.PARAM_ERROR, "邮箱不能为空");
+        }
+
+        if (!StrUtils.isValidEmail(email)) {
+            throw new BusinessException(ResultCode.PARAM_ERROR, "邮箱格式不正确");
+        }
+
+        User user = userMapper.selectByEmail(email);
+        if (user == null) {
+            throw new BusinessException(ResultCode.DATA_NOT_EXISTS, "用户不存在");
+        }
+
+        return convertToVO(user);
+    }
+
+    /**
+     * 检查用户邮箱是否占用
+     *
+     * @param email 用户邮箱
+     * @ return 是否占用
+     */
+    public Boolean checkEmailExists(String email) {
+        if (StrUtils.isBlank(email)) {
+            throw new BusinessException(ResultCode.PARAM_ERROR, "邮箱不能为空");
+        }
+
+        User user = userMapper.selectByEmail(email);
+        return user == null;
+    }
+
+    /**
+     * 根据邮箱修改密码
+     * @param email 邮箱
+     * @param password 密码
+     * @return 是否成功
+     */
+    @Override
+    public Boolean updatePasswordByEmail(String email, String password) {
+
+        // 判断邮箱是否存在
+        if (userMapper.selectByEmail(email) == null) {
+            throw new BusinessException(ResultCode.DATA_NOT_EXISTS, "邮箱不存在");
+        }
+
+        // 判断邮箱是否为空
+        if (StrUtils.isBlank(email)) {
+            throw new BusinessException(ResultCode.PARAM_ERROR, "邮箱不能为空");
+        }
+
+        // 密码加密
+        String salt = EncryptUtils.uuid().replace("-", "");
+        String encodedPassword = passwordEncoder.encode(password + salt);
+
+        int result = userMapper.updatePasswordByEmail(email, encodedPassword, salt);
+
+        return result > 0;
     }
 }

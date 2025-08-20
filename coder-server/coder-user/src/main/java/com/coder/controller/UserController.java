@@ -1,9 +1,11 @@
 package com.coder.controller;
 
+import com.coder.context.UserContext;
 import com.coder.dto.UserCreateDTO;
 import com.coder.dto.UserQueryDTO;
 import com.coder.dto.UserUpdateDTO;
 import com.coder.result.Result;
+import com.coder.result.ResultCode;
 import com.coder.service.UserService;
 import com.coder.vo.UserPermissionVO;
 import com.coder.vo.UserVO;
@@ -122,4 +124,58 @@ public class UserController {
         UserPermissionVO permissionVO = userService.getUserPermissionInfo(userId);
         return Result.success("查询成功", permissionVO);
     }
+
+    /**
+     * 根据邮箱查询用户
+     *
+     * @param email 邮箱
+     * @return UserVO 用户VO
+     */
+    @GetMapping("/get-by-email")
+    @ApiOperation("根据邮箱查询用户")
+    public Result<UserVO> getUserByEmail(
+            @ApiParam(value = "邮箱", required = true)
+            @RequestParam @NotNull(message = "邮箱不能为空") String email) {
+        UserVO userVO = userService.getUserByEmail(email);
+        return Result.success("查询成功", userVO);
+    }
+
+    /**
+     * 检查邮箱是否占用
+     *
+     * @param email 邮箱
+     * @return 是否占用
+     */
+    @GetMapping("/check-email")
+    @ApiOperation("检查邮箱是否占用")
+     public Result<Boolean> checkEmailExists(
+             @ApiParam(value = "邮箱", readOnly = true)
+             @RequestParam @NotNull(message = "邮箱不能为空") String email) {
+         Boolean exists = userService.checkEmailExists(email);
+         if (exists) {
+             return Result.success("邮箱可用", exists);
+         } else {
+             return Result.failed(ResultCode.EMAIL_ALREADY_REGISTER);
+         }
+     }
+
+    /**
+     * 根据邮箱修改密码
+     *
+     * @param email 邮箱
+     * @param password 密码
+     * @return 是否修改成功
+     */
+    @GetMapping("/update-password-by-email")
+     public Result<Boolean> updatePasswordByEmail(
+             @ApiParam(value = "邮箱", required = true)
+             @RequestParam String email,
+             @ApiParam(value = "密码", required = true)
+             @RequestParam String password) {
+
+         Boolean result = userService.updatePasswordByEmail(email, password);
+         return Result.success("密码修改成功", result);
+
+     }
+
 }

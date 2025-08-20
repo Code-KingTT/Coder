@@ -58,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         try {
-            // 🆕 第一步：检查Redis缓存，优化性能
+            // 检查Redis缓存
             Result<UserVO> userResult = userServiceClient.getUserByUsername(loginDTO.getUsername());
             if (userResult != null && userResult.isSuccess() && userResult.getData() != null) {
                 UserVO user = userResult.getData();
@@ -78,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
                 }
             }
 
-            // 🆕 第二步：使用Shiro进行标准认证
+            // 未命中则使用Shiro进行认证
             Subject subject = SecurityUtils.getSubject();
 
             // 创建用户名密码Token
@@ -93,12 +93,10 @@ public class AuthServiceImpl implements AuthService {
                 log.debug("启用记住我功能");
             }
 
-            // 🔐 关键步骤：Shiro认证 - 这里会调用 CustomRealm.doGetAuthenticationInfo()
-            log.debug("开始Shiro认证...");
+            // Shiro认证
             subject.login(token);
-            log.debug("Shiro认证成功");
 
-            // 🆕 第三步：认证成功，获取用户信息
+            // 认证成功，获取用户信息
             String username = (String) subject.getPrincipal();
             log.info("Shiro认证成功，用户：{}", username);
 
@@ -110,15 +108,14 @@ public class AuthServiceImpl implements AuthService {
 
             UserVO user = authUserResult.getData();
 
-            // 🆕 第四步：生成JWT Token（认证成功后）
+            // 生成JWT Token
             String jwtToken = jwtUtils.generateToken(user.getUsername(), user.getId());
-            log.debug("生成JWT Token成功");
 
-            // 第五步：缓存登录状态到Redis
+            // 缓存登录状态到Redis
             String loginKey = Constants.CacheKey.USER_LOGIN + user.getId();
             redisUtils.set(loginKey, jwtToken, jwtUtils.getExpiration(), TimeUnit.SECONDS);
 
-            // 登出Shiro会话，会话管理由JWT处理，避免冲突
+            // 登出Shiro会话，会话管理由JWT处理
             subject.logout();
 
             log.info("用户登录成功，用户名：{}", username);
@@ -225,18 +222,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String logout(String token) {
-        log.info("用户登出");
+
+        Long userId = jwtUtils.getUserIdFromToken(token);
+        String loginKey = Constants.CacheKey.USER_LOGIN + userId;
+
+        // 判断当前Token是否有效
+        if (!redisUtils.hasKey(loginKey)) {
+            return "已退出登录";
+        }
 
         if (StrUtils.isBlank(token)) {
             return "登出成功";
         }
 
         try {
-            // 从Token中获取用户信息
-            Long userId = jwtUtils.getUserIdFromToken(token);
-            
-            // 删除登录状态缓存
-            String loginKey = Constants.CacheKey.USER_LOGIN + userId;
             redisUtils.delete(loginKey);
 
             log.info("用户登出成功，用户ID：{}", userId);
@@ -244,7 +243,7 @@ public class AuthServiceImpl implements AuthService {
 
         } catch (Exception e) {
             log.error("用户登出处理失败：{}", e.getMessage(), e);
-            return "登出成功"; // 即使处理失败也返回成功，避免前端异常
+            return "登出成功";
         }
     }
 
@@ -253,12 +252,11 @@ public class AuthServiceImpl implements AuthService {
         log.info("忘记密码，邮箱：{}", forgotPasswordDTO.getEmail());
 
         try {
-            // 这里可以验证邮箱是否存在于系统中
-            // 为了安全考虑，无论邮箱是否存在都返回成功消息
-
             // 发送重置密码验证码
             return sendEmailCode(forgotPasswordDTO.getEmail(), "reset");
 
+        }  catch (BusinessException e) {
+            throw e;
         } catch (Exception e) {
             log.error("忘记密码处理失败：{}", e.getMessage(), e);
             throw new BusinessException(ResultCode.OPERATION_FAILED, "发送重置邮件失败");
@@ -282,9 +280,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         try {
-            // 注意：这里需要在用户服务中添加根据邮箱重置密码的接口
-            // 目前简化处理
-            log.info("密码重置请求验证通过，邮箱：{}", resetPasswordDTO.getEmail());
+            // 根据邮箱修改密码
+            userServiceClient.updatePasswordByEmail(resetPasswordDTO.getEmail(), resetPasswordDTO.getNewPassword());
 
             // 删除验证码缓存
             redisUtils.delete(cacheKey);
@@ -310,7 +307,7 @@ public class AuthServiceImpl implements AuthService {
         // 检查发送频率限制
         String rateLimitKey = Constants.CacheKey.RATE_LIMIT + "email:" + email;
         if (redisUtils.hasKey(rateLimitKey)) {
-            throw new BusinessException(ResultCode.OPERATION_FAILED, "发送过于频繁，请稍后再试");
+            throw new BusinessException(ResultCode.OPERATION_FAILED, "发送过于频繁，请一分钟后再试");
         }
 
         try {

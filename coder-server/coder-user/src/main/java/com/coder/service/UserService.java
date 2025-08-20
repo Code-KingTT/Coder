@@ -99,4 +99,29 @@ public interface UserService {
      * 根据用户ID查询用户完整权限信息
      */
     UserPermissionVO getUserPermissionInfo(Long userId);
+
+    /**
+     * 根据邮箱查询用户
+     *
+     * @param email 邮箱
+     * @return 是否存在
+     */
+    UserVO getUserByEmail(String email);
+
+    /**
+     * 检查邮箱是否占用
+     *
+     * @param email 邮箱
+     * @return 是否占用
+     */
+    Boolean checkEmailExists(String email);
+
+    /**
+     * 根据邮箱修改密码
+     *
+     * @param email 邮箱
+     * @param password 密码
+     * @return 影响行数
+     */
+    Boolean updatePasswordByEmail(String email, String password);
 }
