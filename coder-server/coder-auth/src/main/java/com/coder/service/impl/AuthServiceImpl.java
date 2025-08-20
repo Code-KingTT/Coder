@@ -8,6 +8,7 @@ import com.coder.result.Result;
 import com.coder.result.ResultCode;
 import com.coder.service.AuthService;
 import com.coder.service.EmailService;
+import com.coder.utils.EmailTemplateUtils;
 import com.coder.utils.JwtUtils;
 import com.coder.utils.RedisUtils;
 import com.coder.utils.StrUtils;
@@ -22,6 +23,8 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,6 +48,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Resource
     private EmailService emailService;
+
+    @Resource
+    private EmailTemplateUtils emailTemplateUtils;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -321,7 +327,7 @@ public class AuthServiceImpl implements AuthService {
             // 发送邮件
             String subject = getEmailSubject(type);
             String content = getEmailContent(type, code);
-            emailService.sendSimpleEmail(email, subject, content);
+            emailService.sendHtmlEmail(email, subject, content);
 
             // 设置发送频率限制，1分钟
             redisUtils.set(rateLimitKey, "1", Constants.CacheExpire.ONE_MINUTE, TimeUnit.SECONDS);
@@ -418,14 +424,17 @@ public class AuthServiceImpl implements AuthService {
      */
     private String getEmailContent(String type, String code) {
         String purpose = "register".equals(type) ? "注册账户" : "重置密码";
-        return String.format(
-                "您好！\n\n" +
-                "您正在进行%s操作，验证码为：%s\n\n" +
-                "验证码有效期为5分钟，请及时使用。\n" +
-                "如果这不是您本人的操作，请忽略此邮件。\n\n" +
-                "此邮件由系统自动发送，请勿回复。\n\n" +
-                "Coder 团队",
-                purpose, code
-        );
+        String actionText = "register".equals(type) ? "完成注册" : "重置密码";
+        String welcomeText = "register".equals(type) ? "欢迎加入Coder大家庭！" : "密码重置验证";
+
+        // 准备模板变量
+        Map<String, String> variables = new HashMap<>();
+        variables.put("purpose", purpose);
+        variables.put("actionText", actionText);
+        variables.put("welcomeText", welcomeText);
+        variables.put("code", code);
+
+        // 渲染模板
+        return emailTemplateUtils.renderTemplate("templates/email-verification.html", variables);
     }
 }

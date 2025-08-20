@@ -25,31 +25,35 @@ public class EmailServiceImpl implements EmailService {
     @Resource
     private JavaMailSender mailSender;
 
-//    @Value("${mail.from.address}")
     @Value("${spring.mail.username}")
-    private String fromAddress;
+    private String smtpUsername;
 
-//    @Value("${mail.from.name}")
-//    @Value("${mail.from.name}")
+    @Value("${mail.from.address:life@coder.com}")
+    private String displayAddress;
+
+    @Value("${mail.from.name:Coder}")
     private String fromName;
 
     @Override
     public void sendSimpleEmail(String to, String subject, String content) {
         log.info("发送简单邮件，收件人：{}，主题：{}", to, subject);
-        
+
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-//            String from = String.format("%s <%s>", fromName, fromAddress);
-//            message.setFrom(from);
-            message.setFrom(fromAddress);
-            message.setTo(to);
-            message.setSubject(subject);
-            message.setText(content);
-            message.setSentDate(new Date());
-            
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
+
+            // 发件人使用真实邮箱
+            helper.setFrom(String.format("%s <%s>", fromName, smtpUsername));
+            // 回复地址使用虚拟邮箱
+            helper.setReplyTo(String.format("%s <%s>", fromName, displayAddress));
+
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(content, false);
+
             mailSender.send(message);
             log.info("简单邮件发送成功，收件人：{}", to);
-            
+
         } catch (Exception e) {
             log.error("发送简单邮件失败，收件人：{}，错误：{}", to, e.getMessage(), e);
             throw new RuntimeException("邮件发送失败", e);
@@ -58,22 +62,24 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendHtmlEmail(String to, String subject, String content) {
-        log.info("发送HTML邮件，收件人：{}，主题：{}", to, subject);
-        
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            String from = String.format("%s <%s>", fromName, fromAddress);
-            helper.setFrom(from);
+
+            // 发件人使用真实邮箱
+            helper.setFrom(String.format("%s <%s>", fromName, smtpUsername));
+            // 回复地址使用虚拟邮箱
+            helper.setReplyTo(String.format("%s <%s>", fromName, displayAddress));
+
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(content, true);
-            
+
             mailSender.send(message);
             log.info("HTML邮件发送成功，收件人：{}", to);
-            
+
         } catch (Exception e) {
-            log.error("发送HTML邮件失败，收件人：{}，错误：{}", to, e.getMessage(), e);
+            log.error("发送HTML邮件失败：{}", e.getMessage(), e);
             throw new RuntimeException("邮件发送失败", e);
         }
     }

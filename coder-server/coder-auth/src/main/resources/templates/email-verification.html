@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coder</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f7fa; }
+        .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center; }
+        .header h1 { color: #ffffff; font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+        .header p { color: #e8f0fe; font-size: 16px; }
+        .content { padding: 40px 30px; }
+        .welcome-section { text-align: center; margin-bottom: 40px; }
+        .welcome-title { color: #2c3e50; font-size: 24px; font-weight: 600; margin-bottom: 15px; }
+        .welcome-desc { color: #7f8c8d; font-size: 16px; line-height: 1.6; }
+        .code-section { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; padding: 30px; text-align: center; margin: 30px 0; box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3); }
+        .code-label { color: #ffffff; font-size: 18px; margin-bottom: 15px; font-weight: 500; }
+        .verification-code { background-color: #ffffff; color: #2c3e50; font-size: 36px; font-weight: 900; letter-spacing: 8px; padding: 20px 30px; border-radius: 10px; display: inline-block; margin: 10px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.1); font-family: 'Courier New', monospace; }
+        .code-note { color: #ffffff; font-size: 14px; margin-top: 15px; opacity: 0.9; }
+        .info-section { background-color: #f8f9fa; border-radius: 10px; padding: 25px; margin: 30px 0; border-left: 4px solid #667eea; }
+        .info-title { color: #2c3e50; font-size: 18px; font-weight: 600; margin-bottom: 15px; }
+        .info-list { color: #5a6c7d; font-size: 15px; line-height: 1.8; }
+        .info-list li { margin-bottom: 8px; }
+        .security-notice { background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 20px; margin: 25px 0; }
+        .security-notice h4 { color: #856404; font-size: 16px; margin-bottom: 10px; }
+        .security-notice p { color: #856404; font-size: 14px; line-height: 1.5; }
+        .footer { background-color: #2c3e50; color: #bdc3c7; padding: 30px; text-align: center; }
+        .footer-logo { font-size: 24px; font-weight: 700; color: #ffffff; margin-bottom: 15px; }
+        .footer-text { font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+        .social-links { margin: 20px 0; }
+        .social-links a { display: inline-block; margin: 0 10px; color: #667eea; text-decoration: none; font-size: 14px; }
+        .divider { height: 2px; background: linear-gradient(90deg, #667eea, #764ba2); margin: 30px 0; border-radius: 1px; }
+        @media only screen and (max-width: 600px) {
+            .content { padding: 20px 15px; }
+            .verification-code { font-size: 28px; letter-spacing: 4px; padding: 15px 20px; }
+            .header h1 { font-size: 24px; }
+            .welcome-title { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="header">
+        <h1>Coder</h1>
+        <p>专业的开发者社区平台</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h2 class="welcome-title">${welcomeText}</h2>
+            <p class="welcome-desc">
+                感谢您选择Coder！为了确保账户安全，请使用以下验证码${actionText}。
+            </p>
+        </div>
+
+        <!-- Verification Code Section -->
+        <div class="code-section">
+            <div class="code-label">📧 您的验证码</div>
+            <div class="verification-code">${code}</div>
+            <div class="code-note">请在5分钟内使用此验证码</div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="info-section">
+            <h3 class="info-title">📋 使用说明</h3>
+            <ul class="info-list">
+                <li>✅ 验证码有效期为 <strong>5分钟</strong></li>
+                <li>✅ 请在相应页面输入完整的6位数字</li>
+                <li>✅ 如未收到验证码，请检查垃圾邮件文件夹</li>
+            </ul>
+        </div>
+
+        <!-- Security Notice -->
+        <div class="security-notice">
+            <h4>🔒 安全提醒</h4>
+            <p>
+                如果这不是您本人的操作，请立即忽略此邮件并考虑修改您的账户密码。
+                Coder团队绝不会主动向您索要密码或验证码信息。
+            </p>
+        </div>
+
+        <div class="divider"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-logo">Coder</div>
+        <div class="footer-text">
+            让编程更简单，让创意无限可能<br>
+            专注于为开发者提供最优质的技术交流平台
+        </div>
+
+        <div class="social-links">
+            <a href="#">官方网站</a> |
+            <a href="#">技术博客</a> |
+            <a href="#">开发者社区</a> |
+            <a href="#">毕业设计</a> |
+            <a href="#">竞赛项目</a> |
+            <a href="#">联系我们</a>
+        </div>
+
+        <div style="margin-top: 20px; font-size: 12px; color: #95a5a6;">
+            <p>此邮件由系统自动发送，请勿直接回复</p>
+            <p>© 2025 Coder Team. All rights reserved.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

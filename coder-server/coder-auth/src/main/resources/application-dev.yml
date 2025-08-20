@@ -58,13 +58,13 @@ spring:
       - org.apache.shiro.spring.boot.autoconfigure.ShiroAutoConfiguration
 
 # 自定义邮件配置
-#mail:
-#  # 发送方信息
-#  from:
-#    # 发送方邮箱
-#    address: ${MAIL_FROM_ADDRESS:life@coder.com}
-#    # 发送方名称
-#    name: ${MAIL_FROM_NAME:Coder}
+mail:
+  # 发送方信息
+  from:
+    # 发送方邮箱
+    address: ${MAIL_FROM_ADDRESS:life@coder.com}
+    # 发送方名称
+    name: ${MAIL_FROM_NAME:Coder}
 
 # MyBatis-Plus配置
 mybatis-plus:
