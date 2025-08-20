@@ -62,6 +62,12 @@ public interface UserServiceClient {
     /**
      * 创建用户（注册功能）
      */
-    @PostMapping("/user/register")
+    @PostMapping("/user/create")
     Result<Long> createUser(@RequestBody RegisterUserDTO registerUserDTO);
+
+    /**
+     * 根据邮箱修改密码
+     */
+    @GetMapping("/user/update-password-by-email")
+    Result<Boolean> updatePasswordByEmail(@RequestParam("email") String email, @RequestParam("password") String password);
 }
