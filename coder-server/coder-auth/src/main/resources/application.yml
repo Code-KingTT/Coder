@@ -17,14 +17,15 @@ spring:
         server-addr: localhost:8848
         file-extension: yml
         group: DEFAULT_GROUP
-        namespace: 5be21940-5a70-465d-8c2c-906b7baf4e10
+        namespace: 0adc00be-5992-47c4-8d9b-d22bf950b6b1
         refresh-enabled: true
         import-check:
           enabled: false
       discovery:
         enabled: true
         server-addr: localhost:8848
-        namespace: 5be21940-5a70-465d-8c2c-906b7baf4e10
+        namespace: 0adc00be-5992-47c4-8d9b-d22bf950b6b1
+        group: DEFAULT_GROUP
 
 # OpenFeign配置
 feign:
@@ -33,6 +34,13 @@ feign:
       default:
         connectTimeout: 5000
         readTimeout: 10000
+        # 生产环境设为 NONE
+        loggerLevel: ${FEIGN_LOG_LEVEL:BASIC}
+      # 针对用户服务的特殊配置
+      coder-user:
+        connectTimeout: 3000
+        readTimeout: 8000
+        loggerLevel: ${FEIGN_LOG_LEVEL:BASIC}
 
 # 日志配置
 logging:
