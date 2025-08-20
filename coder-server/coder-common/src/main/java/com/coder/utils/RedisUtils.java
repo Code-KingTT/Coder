@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -61,6 +62,21 @@ public final class RedisUtils {
      * 有序集合操作
      */
     private ZSetOperations<String, Object> zSetOps;
+
+    /**
+     * 初始化Redis操作对象
+     */
+    @PostConstruct
+    public void init() {
+        this.valueOps = redisTemplate.opsForValue();
+        this.stringValueOps = stringRedisTemplate.opsForValue();
+        this.hashOps = redisTemplate.opsForHash();
+        this.listOps = redisTemplate.opsForList();
+        this.setOps = redisTemplate.opsForSet();
+        this.zSetOps = redisTemplate.opsForZSet();
+
+        log.info("RedisUtils初始化完成");
+    }
 
     /**
      * 分布式锁脚本 - 释放锁

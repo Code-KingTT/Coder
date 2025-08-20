@@ -71,7 +71,13 @@ public enum ResultCode {
     /**
      * 登录失败
      */
-    LOGIN_ERROR(605, "用户名或密码错误");
+    LOGIN_ERROR(605, "用户名或密码错误"),
+
+    /**
+     * 邮箱已存在
+     */
+    EMAIL_ALREADY_REGISTER(606, "该邮箱已注册");
+
 
     /**
      * 状态码
