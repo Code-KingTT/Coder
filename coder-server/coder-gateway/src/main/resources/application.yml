@@ -10,12 +10,19 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
-        namespace: 5be21940-5a70-465d-8c2c-906b7baf4e10
+        namespace: 0adc00be-5992-47c4-8d9b-d22bf950b6b1
         group: DEFAULT_GROUP
 
     gateway:
       # 路由配置
       routes:
+        # 认证服务路由
+        - id: auth-service
+          # lb表示负载均衡
+          uri: lb://coder-auth
+          predicates:
+            - Path=/coder/auth/**
+
         # 用户服务路由
         - id: user-service
           # lb表示负载均衡
@@ -23,7 +30,7 @@ spring:
           predicates:
             # 路径匹配规则：匹配 /api/user/** 的请求
 #            - Path=/api/user/**
-            - Path=/coder/user/**
+            - Path=/coder/**
           filters:
             # 重写路径：将 /api/user/** 重写为 /coder/user/**
             # - RewritePath=/api/user/(?<segment>.*), /coder/user/$\{segment}
@@ -63,3 +70,14 @@ management:
   endpoint:
     health:
       show-details: always
+
+# JWT配置
+jwt:
+  # 密钥
+  secret: coderServerSecretKeyKingZS20000713Sunset
+  # 过期时间（秒）7天
+  expiration: 604800
+  # Token前缀
+  tokenPrefix: Bearer
+  # Header名称
+  headerName: Authorization
