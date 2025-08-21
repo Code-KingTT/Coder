@@ -81,7 +81,12 @@ public enum ResultCode {
     /**
      * 邮箱已存在
      */
-    EMAIL_ALREADY_REGISTER(606, "该邮箱已注册");
+    EMAIL_ALREADY_REGISTER(606, "该邮箱已注册"),
+
+    /**
+     * 用户不存在
+     */
+    USER_NOT_EXISTS(607, "用户不存在");
 
 
     /**
