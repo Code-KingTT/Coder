@@ -372,16 +372,19 @@ public class UserServiceImpl implements UserService {
     public UserVO getUserByUsername(String username) {
         log.info("根据用户名查询用户，用户名：{}", username);
 
-        if (StrUtils.isBlank(username)) {
-            throw new BusinessException(ResultCode.PARAM_ERROR, "用户名不能为空");
-        }
+        try {
+            User user = userMapper.selectByUsername(username);
+            if (user == null) {
+                log.warn("用户不存在，用户名：{}", username);
+                return null;
+            }
 
-        User user = userMapper.selectByUsername(username);
-        if (user == null) {
-            throw new BusinessException(ResultCode.DATA_NOT_EXISTS, "用户不存在");
-        }
+            return convertToVO(user);
 
-        return convertToVO(user);
+        } catch (Exception e) {
+            log.error("查询用户失败，用户名：{}，错误：{}", username, e.getMessage(), e);
+            throw new BusinessException(ResultCode.USER_NOT_EXISTS, "用户不存在");
+        }
     }
 
     @Override
