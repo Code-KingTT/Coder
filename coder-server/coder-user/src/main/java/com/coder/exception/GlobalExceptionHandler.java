@@ -9,6 +9,10 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * 处理与Shiro相关的权限异常
+ */
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -40,5 +44,13 @@ public class GlobalExceptionHandler {
         return Result.failed(ResultCode.FORBIDDEN, "权限验证失败");
     }
 
-    // 其他异常处理...
+    /**
+     * 处理业务异常
+     */
+    @ExceptionHandler(BusinessException.class)
+    public Result<String> handleBusinessException(BusinessException e) {
+        log.warn("业务异常: {}", e.getMessage());
+        return Result.failed(e.getCode(), e.getMessage());
+    }
+
 }
