@@ -54,6 +54,13 @@ public class JwtAuthenticationFilter extends AuthenticatingFilter {
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+
+        // 检查是否在网关已验证过JWT
+        String userIdFromGateway = httpRequest.getHeader("X-User-Id");
+        if (userIdFromGateway != null) {
+            return true;
+        }
+
         String requestURI = httpRequest.getRequestURI();
 
         // 检查是否是OPTIONS请求，如果是则直接放行
