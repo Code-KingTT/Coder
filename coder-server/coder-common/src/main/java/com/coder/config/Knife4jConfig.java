@@ -34,10 +34,12 @@ public class Knife4jConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Coder系统API文档")
-                .description("基于Spring Boot + Spring Cloud的微服务系统API文档")
-                .version("1.0.0")
-                .contact(new Contact("Coder", "http://localhost:8080", "developer@coder.com"))
+                .title("Coder 微服务系统 API 文档")
+                .description("Coder-代码人生")
+                .version("v1.0.0")
+                .contact(new Contact("Coder", "https://www.coder.com", "life@coder.com"))
+                .license("Apache License 2.0")
+                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .build();
     }
 }
