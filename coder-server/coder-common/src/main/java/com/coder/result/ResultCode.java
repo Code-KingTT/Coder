@@ -86,7 +86,12 @@ public enum ResultCode {
     /**
      * 用户不存在
      */
-    USER_NOT_EXISTS(607, "用户不存在");
+    USER_NOT_EXISTS(607, "用户不存在"),
+
+    /**
+     * 文件不存在
+     */
+    DATA_NOT_FOUND(808, "文件不存在");
 
 
     /**

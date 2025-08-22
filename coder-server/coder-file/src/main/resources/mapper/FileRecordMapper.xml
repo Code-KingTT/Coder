@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coder.mapper.FileRecordMapper">
+
+    <!-- 文件操作记录结果映射 -->
+    <resultMap type="com.coder.entity.FileRecord" id="FileRecordResult">
+        <id property="id" column="id"/>
+        <result property="fileId" column="file_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="actionType" column="action_type"/>
+        <result property="actionDesc" column="action_desc"/>
+        <result property="extraData" column="extra_data"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="deleted" column="deleted"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <!-- 基础字段映射 -->
+    <sql id="Base_Column_List">
+        id, file_id, user_id, action_type, action_desc, extra_data,
+        create_time, update_time, create_by, update_by, deleted, remark
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="selectFileRecordVo">
+        SELECT <include refid="Base_Column_List"/> FROM sys_file_record
+    </sql>
+
+    <!-- 插入文件操作记录 -->
+    <insert id="insert" parameterType="com.coder.entity.FileRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_file_record (
+            file_id, user_id, action_type, action_desc, extra_data,
+            create_time, update_time, create_by, update_by, deleted, remark
+        ) VALUES (
+                     #{fileId}, #{userId}, #{actionType}, #{actionDesc}, #{extraData},
+                     #{createTime}, #{updateTime}, #{createBy}, #{updateBy}, #{deleted}, #{remark}
+                 )
+    </insert>
+
+    <!-- 根据ID删除文件操作记录（逻辑删除） -->
+    <update id="deleteById">
+        UPDATE sys_file_record
+        SET deleted = 1, update_time = NOW(), update_by = #{updateBy}
+        WHERE id = #{id} AND deleted = 0
+    </update>
+
+    <!-- 批量删除文件操作记录（逻辑删除） -->
+    <update id="deleteBatchByIds">
+        UPDATE sys_file_record
+        SET deleted = 1, update_time = NOW(), update_by = #{updateBy}
+        WHERE deleted = 0 AND id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!-- 根据文件ID删除相关记录（逻辑删除） -->
+    <update id="deleteByFileId">
+        UPDATE sys_file_record
+        SET deleted = 1, update_time = NOW(), update_by = #{updateBy}
+        WHERE file_id = #{fileId} AND deleted = 0
+    </update>
+
+    <!-- 根据ID查询文件操作记录 -->
+    <select id="selectById" parameterType="Long" resultMap="FileRecordResult">
+        <include refid="selectFileRecordVo"/>
+        WHERE id = #{id} AND deleted = 0
+    </select>
+
+    <!-- 分页查询文件操作记录列表 -->
+    <select id="selectPageList" parameterType="com.coder.dto.FileRecordQueryDTO" resultMap="FileRecordResult">
+        <include refid="selectFileRecordVo"/>
+        <where>
+            deleted = 0
+            <if test="fileId != null">
+                AND file_id = #{fileId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="actionType != null and actionType != ''">
+                AND action_type = #{actionType}
+            </if>
+            <if test="actionDesc != null and actionDesc != ''">
+                AND action_desc LIKE CONCAT('%', #{actionDesc}, '%')
+            </if>
+            <if test="createTimeStart != null and createTimeStart != ''">
+                AND create_time >= #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null and createTimeEnd != ''">
+                AND create_time &lt;= #{createTimeEnd}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询文件操作记录总数 -->
+    <select id="selectCount" parameterType="com.coder.dto.FileRecordQueryDTO" resultType="Long">
+        SELECT COUNT(1) FROM sys_file_record
+        <where>
+            deleted = 0
+            <if test="fileId != null">
+                AND file_id = #{fileId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="actionType != null and actionType != ''">
+                AND action_type = #{actionType}
+            </if>
+            <if test="actionDesc != null and actionDesc != ''">
+                AND action_desc LIKE CONCAT('%', #{actionDesc}, '%')
+            </if>
+            <if test="createTimeStart != null and createTimeStart != ''">
+                AND create_time >= #{createTimeStart}
+            </if>
+            <if test="createTimeEnd != null and createTimeEnd != ''">
+                AND create_time &lt;= #{createTimeEnd}
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据文件ID查询操作记录 -->
+    <select id="selectByFileId" parameterType="Long" resultMap="FileRecordResult">
+        <include refid="selectFileRecordVo"/>
+        WHERE file_id = #{fileId} AND deleted = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据用户ID查询操作记录 -->
+    <select id="selectByUserId" parameterType="Long" resultMap="FileRecordResult">
+        <include refid="selectFileRecordVo"/>
+        WHERE user_id = #{userId} AND deleted = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 统计用户操作次数 -->
+    <select id="countUserActions" resultType="Long">
+        SELECT COUNT(1) FROM sys_file_record
+        WHERE user_id = #{userId} AND deleted = 0
+        <if test="actionType != null and actionType != ''">
+            AND action_type = #{actionType}
+        </if>
+    </select>
+
+    <!-- 统计文件操作次数 -->
+    <select id="countFileActions" resultType="Long">
+        SELECT COUNT(1) FROM sys_file_record
+        WHERE file_id = #{fileId} AND deleted = 0
+        <if test="actionType != null and actionType != ''">
+            AND action_type = #{actionType}
+        </if>
+    </select>
+
+</mapper>

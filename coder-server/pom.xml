@@ -21,6 +21,7 @@
         <module>coder-common</module>
         <module>coder-auth</module>
         <module>coder-user</module>
+        <module>coder-file</module>
     </modules>
 
     <!-- 依赖版本统一管理 -->

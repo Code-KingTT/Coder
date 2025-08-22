@@ -40,6 +40,13 @@ spring:
             # 重写路径：将 /api/user/** 重写为 /coder/user/**
             # - RewritePath=/api/user/(?<segment>.*), /coder/user/$\{segment}
 
+        # 文件服务路由
+        - id: file-service
+          # lb表示负载均衡
+          uri: lb://coder-file
+          predicates:
+            - Path=/coder/**
+
       # 跨域配置
       globalcors:
         cors-configurations:

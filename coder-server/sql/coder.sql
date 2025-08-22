@@ -183,6 +183,92 @@ CREATE TABLE `sys_role_menu`
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='角色菜单关联表';
 
+-- 文件表
+DROP TABLE IF EXISTS `sys_file`;
+CREATE TABLE `sys_file`
+(
+    `id`                BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+
+    -- 文件基础信息
+    `file_name`         VARCHAR(255) NOT NULL COMMENT '文件原始名称',
+    `file_path`         VARCHAR(500) NOT NULL COMMENT '文件存储路径',
+    `file_url`          VARCHAR(500)          DEFAULT NULL COMMENT '文件访问URL',
+    `file_size`         BIGINT(20) NOT NULL COMMENT '文件大小（字节）',
+    `file_type`         VARCHAR(50)  NOT NULL COMMENT '文件类型（扩展名）',
+    `mime_type`         VARCHAR(100)          DEFAULT NULL COMMENT 'MIME类型',
+    `file_md5`          VARCHAR(32)           DEFAULT NULL COMMENT '文件MD5值',
+    `file_sha1`         VARCHAR(40)           DEFAULT NULL COMMENT '文件SHA1值',
+
+    -- 文件分类信息
+    `category`          VARCHAR(50)           DEFAULT 'OTHER' COMMENT '文件分类：IMAGE-图片，DOCUMENT-文档，VIDEO-视频，AUDIO-音频，OTHER-其他',
+    `business_type`     VARCHAR(50)           DEFAULT NULL COMMENT '业务类型：AVATAR-头像，ATTACHMENT-附件，TEMP-临时文件等',
+    `module_name`       VARCHAR(50)           DEFAULT NULL COMMENT '所属模块名称',
+    `business_id`       BIGINT(20)            DEFAULT NULL COMMENT '关联业务ID',
+
+    -- 存储信息
+    `storage_type`      VARCHAR(20)  NOT NULL DEFAULT 'LOCAL' COMMENT '存储类型：LOCAL-本地存储，OSS-阿里云OSS，COS-腾讯云COS，QINIU-七牛云等',
+    `bucket_name`       VARCHAR(100)          DEFAULT NULL COMMENT '存储桶名称（云存储）',
+    `storage_path`      VARCHAR(500)          DEFAULT NULL COMMENT '存储路径（云存储）',
+
+    -- 分片上传相关
+    `chunk_size`        INT(11) DEFAULT NULL COMMENT '分片大小（字节）',
+    `total_chunks`      INT(11) DEFAULT NULL COMMENT '总分片数',
+    `upload_id`         VARCHAR(100)          DEFAULT NULL COMMENT '分片上传ID（云存储）',
+    `upload_status`     TINYINT(1) DEFAULT 1 COMMENT '上传状态：0-上传中，1-上传完成，2-上传失败',
+
+    -- 文件状态
+    `status`            TINYINT(1) NOT NULL DEFAULT 1 COMMENT '文件状态：0-禁用，1-正常，2-待审核，3-审核失败',
+    `download_count`    INT(11) DEFAULT 0 COMMENT '下载次数',
+    `view_count`        INT(11) DEFAULT 0 COMMENT '查看次数',
+    `favorite_count`    INT(11) DEFAULT 0 COMMENT '收藏次数',
+
+    -- 权限控制
+    `access_level`      TINYINT(1) DEFAULT 1 COMMENT '访问级别：1-公开，2-登录可见，3-私有',
+    `owner_id`          BIGINT(20)            DEFAULT NULL COMMENT '文件所有者ID',
+
+    -- 扩展信息
+    `thumbnail_path`    VARCHAR(500)          DEFAULT NULL COMMENT '缩略图路径（图片/视频）',
+    `duration`          INT(11) DEFAULT NULL COMMENT '时长（音频/视频，单位：秒）',
+    `width`             INT(11) DEFAULT NULL COMMENT '宽度（图片/视频）',
+    `height`            INT(11) DEFAULT NULL COMMENT '高度（图片/视频）',
+    `tags`              VARCHAR(500)          DEFAULT NULL COMMENT '文件标签，多个标签用逗号分隔',
+
+    -- 基础字段（继承自BaseEntity）
+    `create_time`       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `create_by`         BIGINT(20) DEFAULT NULL COMMENT '创建人ID',
+    `update_by`         BIGINT(20) DEFAULT NULL COMMENT '更新人ID',
+    `deleted`           TINYINT(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除标记：0-未删除，1-已删除',
+    `remark`            VARCHAR(500)          DEFAULT NULL COMMENT '备注信息',
+
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文件表';
+
+-- 文件操作记录表
+DROP TABLE IF EXISTS `sys_file_record`;
+CREATE TABLE `sys_file_record`
+(
+    `id`                BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+
+    -- 关联信息
+    `file_id`           BIGINT(20) NOT NULL COMMENT '文件ID',
+    `user_id`           BIGINT(20) NOT NULL COMMENT '用户ID',
+
+    -- 操作信息
+    `action_type`       VARCHAR(20) NOT NULL COMMENT '操作类型：UPLOAD-上传，DOWNLOAD-下载，VIEW-查看，FAVORITE-收藏，UNFAVORITE-取消收藏，DELETE-删除',
+    `action_desc`       VARCHAR(200)         DEFAULT NULL COMMENT '操作描述',
+
+    -- 基础字段（继承自BaseEntity）
+    `create_time`       DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`       DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `create_by`         BIGINT(20) DEFAULT NULL COMMENT '创建人ID',
+    `update_by`         BIGINT(20) DEFAULT NULL COMMENT '更新人ID',
+    `deleted`           TINYINT(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除标记：0-未删除，1-已删除',
+    `remark`            VARCHAR(500)         DEFAULT NULL COMMENT '备注信息',
+
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='文件操作记录表';
+
 -- ======================================
 -- 初始化数据
 -- ======================================
