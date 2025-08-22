@@ -71,34 +71,6 @@ logging:
       max-history: 30
       total-size-cap: 1GB
 
-# Knife4j配置
-knife4j:
-  enable: true
-  setting:
-    language: zh_cn
-    enable-version: true
-    enable-reload-cache-parameter: true
-    enable-after-script: true
-    enable-filter-multipart-api-method-type: POST
-    enable-filter-multipart-apis: false
-    enable-request-cache: true
-    enable-host: false
-    enable-host-text: http://localhost:8081
-    enable-search: true
-    enable-footer: false
-    enable-footer-custom: true
-    footer-custom-content: Coder
-    enable-dynamic-parameter: true
-    enable-debug: true
-    enable-open-api: false
-    enable-group: true
-  cors: false
-  production: false
-  basic:
-    enable: false
-    username: admin
-    password: 123456
-
 # PageHelper分页插件配置
 pagehelper:
   # 数据库
