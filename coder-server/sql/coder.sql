@@ -329,6 +329,151 @@ CREATE TABLE `sys_user_privacy`
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户隐私信息表';
 
+-- 软件系统展示表
+DROP TABLE IF EXISTS `sys_software`;
+CREATE TABLE `sys_software`
+(
+    `id`                   BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+
+    -- 基础信息
+    `software_name`        VARCHAR(100) NOT NULL COMMENT '软件系统名称',
+    `software_version`     VARCHAR(20)           DEFAULT NULL COMMENT '软件版本',
+    `cover_image`          VARCHAR(500)          DEFAULT NULL COMMENT '封面图片URL',
+    `short_description`    VARCHAR(500)          DEFAULT NULL COMMENT '简短描述',
+    `detailed_description` TEXT                  DEFAULT NULL COMMENT '详细介绍',
+
+    -- 技术栈信息
+    `programming_languages` VARCHAR(300)         DEFAULT NULL COMMENT '编程语言，多个语言用逗号分隔，如：Java,JavaScript,Python',
+    `frontend_tech`        VARCHAR(500)          DEFAULT NULL COMMENT '前端技术栈，多个技术用逗号分隔，如：Vue.js,React,Angular,HTML5,CSS3',
+    `backend_tech`         VARCHAR(500)          DEFAULT NULL COMMENT '后端技术栈，多个技术用逗号分隔，如：Spring Boot,Node.js,Django,Express',
+    `database_tech`        VARCHAR(300)          DEFAULT NULL COMMENT '数据库技术，多个数据库用逗号分隔，如：MySQL,Redis,MongoDB,PostgreSQL',
+    `middleware_tech`      VARCHAR(500)          DEFAULT NULL COMMENT '中间件技术，多个中间件用逗号分隔，如：Nginx,RabbitMQ,Kafka,Nacos,Gateway',
+    `development_tools`    VARCHAR(500)          DEFAULT NULL COMMENT '开发工具，多个工具用逗号分隔，如：IntelliJ IDEA,VS Code,Git,Maven,Docker',
+    `deployment_tech`      VARCHAR(300)          DEFAULT NULL COMMENT '部署技术，多个技术用逗号分隔，如：Docker,Kubernetes,Jenkins,Linux',
+
+    -- 项目信息
+    `project_type`         VARCHAR(50)           DEFAULT NULL COMMENT '项目类型：WEB-网站，APP-应用，DESKTOP-桌面应用，API-接口服务等',
+    `development_status`   TINYINT(1) DEFAULT 1 COMMENT '开发状态：1-开发中，2-已完成，3-维护中，4-已停止',
+    `difficulty_level`     TINYINT(1) DEFAULT 1 COMMENT '难度等级：1-简单，2-中等，3-困难，4-专家级',
+    `project_duration`     VARCHAR(50)           DEFAULT NULL COMMENT '开发周期',
+    `team_size`            INT(11) DEFAULT 1 COMMENT '团队规模',
+
+    -- 制作人信息
+    `author_name`          VARCHAR(100)          DEFAULT NULL COMMENT '主要制作人姓名',
+    `author_avatar`        VARCHAR(500)          DEFAULT NULL COMMENT '制作人头像',
+    `author_title`         VARCHAR(100)          DEFAULT NULL COMMENT '制作人职位/头衔',
+    `author_contact`       VARCHAR(200)          DEFAULT NULL COMMENT '制作人联系方式',
+    `team_members`         TEXT                  DEFAULT NULL COMMENT '团队成员信息，JSON格式存储',
+
+    -- 项目链接
+    `demo_url`             VARCHAR(500)          DEFAULT NULL COMMENT '演示地址',
+    `source_code_url`      VARCHAR(500)          DEFAULT NULL COMMENT '源码地址',
+    `documentation_url`    VARCHAR(500)          DEFAULT NULL COMMENT '文档地址',
+    `download_url`         VARCHAR(500)          DEFAULT NULL COMMENT '下载地址',
+
+    -- 页面截图
+    `page_screenshots`     TEXT                  DEFAULT NULL COMMENT '系统页面截图，JSON数组格式存储多张图片URL',
+    `feature_images`       TEXT                  DEFAULT NULL COMMENT '功能特色图片，JSON数组格式',
+
+    -- 统计信息
+    `view_count`           INT(11) DEFAULT 0 COMMENT '查看次数',
+    `like_count`           INT(11) DEFAULT 0 COMMENT '点赞次数',
+    `star_count`           INT(11) DEFAULT 0 COMMENT '收藏次数',
+    `download_count`       INT(11) DEFAULT 0 COMMENT '下载次数',
+
+    -- 分类和标签
+    `category`             VARCHAR(50)           DEFAULT NULL COMMENT '软件分类：BUSINESS-商务，EDUCATION-教育，ENTERTAINMENT-娱乐，TOOL-工具等',
+    `tags`                 VARCHAR(500)          DEFAULT NULL COMMENT '标签，多个标签用逗号分隔',
+
+    -- 状态控制
+    `status`               TINYINT(1) NOT NULL DEFAULT 1 COMMENT '状态：0-下架，1-正常，2-推荐，3-置顶',
+    `is_open_source`       TINYINT(1) DEFAULT 0 COMMENT '是否开源：0-否，1-是',
+    `is_free`              TINYINT(1) DEFAULT 1 COMMENT '是否免费：0-否，1-是',
+
+    -- 基础字段（继承自BaseEntity）
+    `create_time`          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `create_by`            BIGINT(20) DEFAULT NULL COMMENT '创建人ID',
+    `update_by`            BIGINT(20) DEFAULT NULL COMMENT '更新人ID',
+    `deleted`              TINYINT(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除标记：0-未删除，1-已删除',
+    `remark`               VARCHAR(500)          DEFAULT NULL COMMENT '备注信息',
+
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='软件系统展示表';
+
+-- 社区论坛表
+DROP TABLE IF EXISTS `community_post`;
+CREATE TABLE `community_post`
+(
+    `id`                BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+
+    -- 帖子基础信息
+    `title`             VARCHAR(200) NOT NULL COMMENT '帖子标题',
+    `content`           LONGTEXT     NOT NULL COMMENT '帖子内容',
+    `content_type`      TINYINT(1) DEFAULT 1 COMMENT '内容类型：1-普通文本，2-Markdown，3-富文本',
+    `summary`           VARCHAR(500)          DEFAULT NULL COMMENT '帖子摘要',
+
+    -- 作者信息
+    `author_id`         BIGINT(20) NOT NULL COMMENT '作者用户ID',
+    `author_name`       VARCHAR(100) NOT NULL COMMENT '作者用户名',
+    `author_avatar`     VARCHAR(500)          DEFAULT NULL COMMENT '作者头像',
+
+    -- 分类信息
+    `category_id`       BIGINT(20)            DEFAULT NULL COMMENT '分类ID',
+    `category_name`     VARCHAR(100)          DEFAULT NULL COMMENT '分类名称',
+    `tags`              VARCHAR(500)          DEFAULT NULL COMMENT '标签，多个标签用逗号分隔',
+
+    -- 帖子类型
+    `post_type`         TINYINT(1) DEFAULT 1 COMMENT '帖子类型：1-普通帖子，2-精华帖，3-置顶帖，4-公告，5-问答',
+    `is_original`       TINYINT(1) DEFAULT 1 COMMENT '是否原创：0-转载，1-原创',
+
+    -- 互动统计
+    `view_count`        INT(11) DEFAULT 0 COMMENT '浏览次数',
+    `like_count`        INT(11) DEFAULT 0 COMMENT '点赞次数',
+    `dislike_count`     INT(11) DEFAULT 0 COMMENT '踩的次数',
+    `comment_count`     INT(11) DEFAULT 0 COMMENT '评论次数',
+    `share_count`       INT(11) DEFAULT 0 COMMENT '分享次数',
+    `collect_count`     INT(11) DEFAULT 0 COMMENT '收藏次数',
+
+    -- 帖子状态
+    `status`            TINYINT(1) NOT NULL DEFAULT 1 COMMENT '帖子状态：0-草稿，1-已发布，2-审核中，3-已锁定，4-已删除',
+    `is_top`            TINYINT(1) DEFAULT 0 COMMENT '是否置顶：0-否，1-全局置顶，2-分类置顶',
+    `is_essence`        TINYINT(1) DEFAULT 0 COMMENT '是否精华：0-否，1-是',
+    `is_closed`         TINYINT(1) DEFAULT 0 COMMENT '是否关闭评论：0-否，1-是',
+
+    -- 审核信息
+    `audit_status`      TINYINT(1) DEFAULT 1 COMMENT '审核状态：0-待审核，1-审核通过，2-审核拒绝',
+    `audit_time`        DATETIME              DEFAULT NULL COMMENT '审核时间',
+    `audit_by`          BIGINT(20)            DEFAULT NULL COMMENT '审核人ID',
+    `audit_reason`      VARCHAR(500)          DEFAULT NULL COMMENT '审核意见',
+
+    -- 附件信息
+    `attachments`       TEXT                  DEFAULT NULL COMMENT '附件信息，JSON数组格式存储文件ID和名称',
+    `images`            TEXT                  DEFAULT NULL COMMENT '图片信息，JSON数组格式存储图片URL',
+
+    -- 扩展信息
+    `ip_address`        VARCHAR(50)           DEFAULT NULL COMMENT '发帖IP地址',
+    `user_agent`        VARCHAR(500)          DEFAULT NULL COMMENT '用户代理信息',
+    `source_platform`   VARCHAR(50)           DEFAULT 'WEB' COMMENT '发帖平台：WEB-网页，APP-应用，MOBILE-手机版',
+
+    -- 时间信息
+    `publish_time`      DATETIME              DEFAULT NULL COMMENT '发布时间',
+    `last_reply_time`   DATETIME              DEFAULT NULL COMMENT '最后回复时间',
+    `last_reply_by`     BIGINT(20)            DEFAULT NULL COMMENT '最后回复人ID',
+    `top_time`          DATETIME              DEFAULT NULL COMMENT '置顶时间',
+    `essence_time`      DATETIME              DEFAULT NULL COMMENT '加精时间',
+
+    -- 基础字段（继承自BaseEntity）
+    `create_time`       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `create_by`         BIGINT(20) DEFAULT NULL COMMENT '创建人ID',
+    `update_by`         BIGINT(20) DEFAULT NULL COMMENT '更新人ID',
+    `deleted`           TINYINT(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除标记：0-未删除，1-已删除',
+    `remark`            VARCHAR(500)          DEFAULT NULL COMMENT '备注信息',
+
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='社区论坛帖子表';
+
 
 -- ======================================
 -- 初始化数据
