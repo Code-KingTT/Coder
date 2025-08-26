@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coder.mapper.UserPrivacyMapper">
+
+    <!-- 用户隐私信息结果映射 -->
+    <resultMap type="com.coder.entity.UserPrivacy" id="UserPrivacyResult">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="ipAddress" column="ip_address"/>
+        <result property="realIp" column="real_ip"/>
+        <result property="forwardedFor" column="forwarded_for"/>
+        <result property="proxyIp" column="proxy_ip"/>
+        <result property="userAgent" column="user_agent"/>
+        <result property="browserName" column="browser_name"/>
+        <result property="browserVersion" column="browser_version"/>
+        <result property="browserEngine" column="browser_engine"/>
+        <result property="accept" column="accept"/>
+        <result property="acceptLanguage" column="accept_language"/>
+        <result property="acceptEncoding" column="accept_encoding"/>
+        <result property="osName" column="os_name"/>
+        <result property="osVersion" column="os_version"/>
+        <result property="osArch" column="os_arch"/>
+        <result property="deviceType" column="device_type"/>
+        <result property="deviceBrand" column="device_brand"/>
+        <result property="deviceModel" column="device_model"/>
+        <result property="referer" column="referer"/>
+        <result property="requestMethod" column="request_method"/>
+        <result property="requestUri" column="request_uri"/>
+        <result property="host" column="host"/>
+        <result property="origin" column="origin"/>
+        <result property="loginType" column="login_type"/>
+        <result property="loginResult" column="login_result"/>
+        <result property="loginDuration" column="login_duration"/>
+        <result property="requestHeaders" column="request_headers"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="deleted" column="deleted"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <!-- 新增用户隐私信息 -->
+    <insert id="insertUserPrivacy" parameterType="com.coder.entity.UserPrivacy" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sys_user_privacy (
+        user_id, ip_address, real_ip, forwarded_for, proxy_ip,
+        user_agent, browser_name, browser_version, browser_engine,
+        accept, accept_language, accept_encoding,
+        os_name, os_version, os_arch,
+        device_type, device_brand, device_model,
+        referer, request_method, request_uri, host, origin,
+        login_type, login_result, login_duration, request_headers,
+        create_time, update_time, create_by, update_by, deleted, remark
+        ) VALUES (
+        #{userId}, #{ipAddress}, #{realIp}, #{forwardedFor}, #{proxyIp},
+        #{userAgent}, #{browserName}, #{browserVersion}, #{browserEngine},
+        #{accept}, #{acceptLanguage}, #{acceptEncoding},
+        #{osName}, #{osVersion}, #{osArch},
+        #{deviceType}, #{deviceBrand}, #{deviceModel},
+        #{referer}, #{requestMethod}, #{requestUri}, #{host}, #{origin},
+        #{loginType}, #{loginResult}, #{loginDuration}, #{requestHeaders},
+        #{createTime}, #{updateTime}, #{createBy}, #{updateBy}, #{deleted}, #{remark}
+        )
+    </insert>
+
+</mapper>

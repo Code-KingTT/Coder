@@ -1,0 +1,31 @@
+# 主配置文件
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  application:
+    name: coder-file
+  config:
+    import:
+      - optional:nacos:application-${spring.profiles.active:dev}.yml
+  cloud:
+    nacos:
+      config:
+        enabled: true
+        server-addr: localhost:8848
+        file-extension: yml
+        group: DEFAULT_GROUP
+        namespace: 5be21940-5a70-465d-8c2c-906b7baf4e10
+        refresh-enabled: true
+        import-check:
+          enabled: false
+      discovery:
+        enabled: true
+        server-addr: localhost:8848
+        namespace: 5be21940-5a70-465d-8c2c-906b7baf4e10
+        group: DEFAULT_GROUP
+        # 服务实例配置
+        instance:
+          # 优先使用IP地址
+          prefer-ip-address: true
+          ip: ${spring.cloud.client.ip-address:127.0.0.1}
+          port: ${server.port}
